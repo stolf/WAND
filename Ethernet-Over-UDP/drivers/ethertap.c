@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.8 2001/10/23 09:23:48 gsharp Exp $
+ * $Id: ethertap.c,v 1.9 2002/03/18 10:01:01 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -13,6 +13,12 @@
  *
  * TODO:
  *  Restore all flags on link 'down'.
+ * 
+ * Some helpfull (but damn hard to find and remember after a few months !)
+ * man pages:
+ * 
+ * man 7 netdevice  - ioctl's and ifreq struct decscriptions for linux 
+ *                    devices
  */
  
 #include <stdio.h>
@@ -96,7 +102,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.8 2001/10/23 09:23:48 gsharp Exp $",
+	"$Id: ethertap.c,v 1.9 2002/03/18 10:01:01 jimmyish Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
