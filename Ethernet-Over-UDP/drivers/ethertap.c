@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.7 2001/09/08 12:41:33 isomer Exp $
+ * $Id: ethertap.c,v 1.8 2001/10/23 09:23:48 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -15,9 +15,6 @@
  *  Restore all flags on link 'down'.
  */
  
-#define MAX_ETHERTAP_DEVICES 16
-#define FCS 2
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -30,6 +27,7 @@
 #include <net/route.h>
 #include <sys/socket.h>
 
+#include "ethertap_cfg.h" /* grab max and default /dev/tapX numbers */
 #include "driver.h"
 
 static int fd = -1;
@@ -41,13 +39,13 @@ static int ethertap_setup(unsigned long myid)
 	printf("ethertap_setup( %lu ) entered...\n", myid);
 
 	fd = 0;	
-	tapdevno = 0;
+	tapdevno = FIRST_TAP_NUMBER;
 	
 	while (tapdevno<MAX_ETHERTAP_DEVICES) {
 		snprintf(tapdevice, 16, "/dev/tap%d", tapdevno);
-		fd = open(tapdevice, O_RDWR);					
+		fd = open(tapdevice, O_RDWR);
 		if( fd >= 0 ) {
-			return fd;			
+			return fd;
 		}
 		tapdevno++;
 	}
@@ -98,7 +96,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.7 2001/09/08 12:41:33 isomer Exp $",
+	"$Id: ethertap.c,v 1.8 2001/10/23 09:23:48 gsharp Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
