@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.14 2002/04/18 11:26:25 isomer Exp $
+ * $Id: Etud.cc,v 1.15 2002/04/18 11:45:31 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -39,7 +39,7 @@ int load_module(char *s)
 
 int main(int arvc,char **argv)
 {
-	char *module;
+	char *module=NULL;
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
 	};
