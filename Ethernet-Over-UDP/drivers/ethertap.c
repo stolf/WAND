@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.22 2003/02/02 10:46:02 isomer Exp $
+ * $Id: ethertap.c,v 1.23 2003/02/09 10:22:37 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -79,7 +79,7 @@ static int ethertap_setup(char *req_name)
 	
 	if(fd < 0){
 		logger(MOD_DRIVERS, 1, "Can't open ethertap device, aborting.\n");
-		logger(MOD_DRIVERS, 1, "does /dev/tap* exist? is netlink_dev and ethertap modules loaded?\n"):
+		logger(MOD_DRIVERS, 1, "Check that /dev/tap* exists? Are the netlink_dev and ethertap modules loaded?\n");
 		return -1;
 	}
 
@@ -162,7 +162,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.22 2003/02/02 10:46:02 isomer Exp $",
+	"$Id: ethertap.c,v 1.23 2003/02/09 10:22:37 cuchulain Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
