@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.20 2002/11/30 08:31:38 mattgbrown Exp $
+ * $Id: ui.cc,v 1.21 2002/11/30 09:43:18 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -75,6 +75,16 @@ static void m_getmac(int fd,char **argv,int argc)
 
 }
 
+/* GETPORT */
+static void m_getport(int fd,char **argv,int argc)
+{
+	char tbuff[80];
+	sprintf(tbuff,"+GETPORT %u\r\n", udp_port);
+	ui_send(fd, tbuff);
+	ui_send(fd, "-OK\r\n");
+
+}
+
 /* LIST */
 static void m_list(int fd,char **argv,int argc)
 {
@@ -110,6 +120,7 @@ static struct functable_entry_t functable[] = {
 	{ "ADD", m_add },
 	{ "DEL", m_del },
 	{ "GETMAC", m_getmac },
+	{ "GETPORT", m_getport },
 	{ "LIST", m_list },
 	{ "VERSION", m_version },
 	{ NULL, NULL }
