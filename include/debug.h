@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.h,v 1.1 2002/04/17 12:13:18 jimmyish Exp $
+ * $Id: debug.h,v 1.2 2002/04/18 07:59:42 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -67,6 +67,8 @@ void logger(int module, int level, const char *format, ...);
 
 #define MOD_MISC 0	/* Misc output. Hopefully used less and less */
 #define MOD_CONFIG 1	/* Output for the configuration parsing. */
+#define MOD_DRIVERS 2	/* Anything to do with etud's drivers. */
+#define MOD_INIT 3	/* Anything during code setup and initialisation */
 
 #ifdef __cplusplus
 }
