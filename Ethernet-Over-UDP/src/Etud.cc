@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.50 2003/01/13 08:41:42 isomer Exp $
+ * $Id: Etud.cc,v 1.51 2003/01/13 08:51:36 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -30,7 +30,7 @@
 extern int modtolevel[];
 char *macaddr=NULL;
 char *ifname=NULL;
-int mtu=0;
+int mtu=1280;
 
 int load_module(char *filename)
 {
@@ -82,7 +82,7 @@ int main(int argc,char **argv)
 	char *cifname=NULL;
 	int cdo_daemonise=1;
 	int cudpport=-1;
-  int cmtu=-1;
+  	int cmtu=-1;
 
 	/* Possible config file options */
 	config_t main_config[] = {
