@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.48 2002/12/07 00:22:49 cuchulain Exp $
+ * $Id: Etud.cc,v 1.49 2003/01/09 12:21:25 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -97,6 +97,7 @@ int main(int argc,char **argv)
 		{ "debug_MOD_INIT", TYPE_INT|TYPE_NULL, &modtolevel[MOD_INIT]},
 		{ "debug_MOD_IPC", TYPE_INT|TYPE_NULL, &modtolevel[MOD_IPC]},
 		{ "debug_MOD_DRIVERS", TYPE_INT|TYPE_NULL, &modtolevel[MOD_DRIVERS]},
+		{ "debug_MOD_IF", TYPE_INT|TYPE_NULL, &modtolevel[MOD_IF]},
 		{ NULL, 0, NULL }
 	};
 
