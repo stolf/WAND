@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.9 2001/08/14 00:58:52 gsharp Exp $
+ * $Id: Etud.cc,v 1.10 2001/10/27 10:04:24 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -23,7 +23,10 @@
 
 int load_module(char *s)
 {
-	if(!dlopen(s,RTLD_NOW)) {
+	char filename[1024];
+	strcpy(filename,"/usr/local/lib/wand/");
+	strcat(filename,s);
+	if(!dlopen(filename,RTLD_NOW)) {
 		cout << "Error loading module '" << s << "': " << dlerror() << endl;
 		return 0;
 	}
