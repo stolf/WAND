@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.23 2002/11/30 10:33:27 isomer Exp $
+ * $Id: mainloop.cc,v 1.24 2003/01/19 07:18:27 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -130,7 +130,6 @@ void mainloop(void)
 	}
 	logger(MOD_INIT, 1, "Shutting down - breaking out of mainloop\n");
 	// Close file descriptors
-	// add: shut interface down
 	for (fd2callback_t::const_iterator i=fd2callback.begin(); 
 		     i!=fd2callback.end(); 
 		     i++) {
