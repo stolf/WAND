@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: protoverlay.h,v 1.2 2001/10/27 14:06:06 gsharp Exp $
+ * $Id: protoverlay.h,v 1.3 2002/12/02 03:00:57 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -44,7 +44,11 @@ void delete_response( response_t *response );
  * format. Returns number of characters output.
  */
 int print_response( response_t *response, FILE *stream );
-  
+
+/* Functions for communicating with Etud */
+void tellEtud(char *msg, char *control_file_path);
+response_t *askEtud(char *msg, char *control_file_path);
+
 #ifdef __cplusplus
 }
 #endif
