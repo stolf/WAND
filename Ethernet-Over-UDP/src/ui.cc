@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.26 2003/01/19 03:07:57 jimmyish Exp $
+ * $Id: ui.cc,v 1.27 2003/01/19 03:27:19 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -104,7 +104,7 @@ static void m_list(int fd,char **argv,int argc)
 		sprintf(tbuff,"+LIST %s\t%s\t%d\r\n",
 			i->first(),
 			inet_ntoa(i->second.sin_addr), 
-			i->second.sin_port);
+			ntohs(i->second.sin_port));
 		ui_send(fd,tbuff);
 	}
 	ui_send(fd,"-OK\r\n");
