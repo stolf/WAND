@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.35 2002/11/30 08:11:22 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.36 2002/11/30 08:20:44 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -9,7 +9,6 @@
 #include <sys/types.h> /* for select, umask and open */
 #include <sys/stat.h> /* for umask and open */
 #include <net/ethernet.h> /* for ether_header and ETH_ALEN */
-#include <iostream.h> /* for cout */
 #include <dlfcn.h> /* for dlopen */
 #include <unistd.h> /* for select */
 #include <fcntl.h> /* for open */
