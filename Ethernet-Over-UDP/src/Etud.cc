@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.15 2002/04/18 11:45:31 isomer Exp $
+ * $Id: Etud.cc,v 1.16 2002/04/18 11:58:30 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -23,14 +23,11 @@
 #include "debug.h"
 #include "config.h"
 
-int load_module(char *s)
+int load_module(char *filename)
 {
-	char filename[1024];
-	strcpy(filename,"/usr/local/lib/wand/");
-	strcat(filename,s);
 	if(!dlopen(filename,RTLD_NOW)) {
 		logger(MOD_INIT, 1, "Error loading module '%s': %s\n",
-				s, dlerror());
+				filename , dlerror());
 		
 		return 0;
 	}
