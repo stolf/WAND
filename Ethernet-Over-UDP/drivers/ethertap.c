@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.14 2002/07/07 10:06:25 jimmyish Exp $
+ * $Id: ethertap.c,v 1.15 2002/07/07 10:08:17 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -75,7 +75,7 @@ static int ethertap_setup(char *req_name)
 	sprintf(ifr.ifr_name, "tap%d", tapdevno);
 	sprintf(ifr.ifr_newname, "%s", ifname);
 	
-	if(ioctl(fd, SIOCSIFNAME, ifr, sizeof(ifr)) < 0){
+	if(ioctl(fd, SIOCSIFNAME, &ifr, sizeof(ifr)) < 0){
 		logger(MOD_DRV, 1, 
 				"Could not rename ethertap interface to %s - %m.\n", 
 				ifname);
@@ -130,7 +130,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.14 2002/07/07 10:06:25 jimmyish Exp $",
+	"$Id: ethertap.c,v 1.15 2002/07/07 10:08:17 jimmyish Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
