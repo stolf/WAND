@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.h,v 1.7 2001/10/26 12:37:13 gsharp Exp $
+ * $Id: list.h,v 1.8 2002/11/30 07:54:06 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -13,9 +13,9 @@
 #include <stdio.h> /* hack hack */
 
 class ether_t {
-	private:
-		unsigned char address[6];
 	public:
+		unsigned char address[6];
+
 		ether_t(void) {
 			memset(address,0,sizeof(address));
 		}

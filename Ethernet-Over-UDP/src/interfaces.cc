@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.12 2002/11/30 05:22:53 jimmyish Exp $
+ * $Id: interfaces.cc,v 1.13 2002/11/30 07:54:06 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -13,7 +13,14 @@
 #include <vector>
 #include <map>
 #include <sys/socket.h>
+#include <linux/sockios.h>
+#include <linux/if.h>
+#include <linux/if_arp.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+
 #include "debug.h"
+#include "etud.h"
 
 struct ether_header_t {
 	unsigned short int fcs;
@@ -72,10 +79,34 @@ static void do_read(int fd)
 
 int init_interface(void)
 {
+
+	struct ifreq ifr;
+	int skfd;
+	ether_t ether;
+
+	/* Open a socket so we can ioctl() */
+  if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+  	logger(MOD_IF, 1, "Socket create failed - %m\n");
+    return -1;
+  }
+
 	int ifd;
-	if ((ifd=driver->setup("wan0"))<=0) {
+	if ((ifd=driver->setup(ifname))<=0) {
 		return 0;
 	}
+	
+	/* Configure the MAC Address on the interface */
+	snprintf(ifr.ifr_name, IFNAMSIZ, "%s", ifname);
+	ether.parse(macaddr);
+	ifr.ifr_hwaddr.sa_family = ARPHRD_ETHER;
+	memcpy(&ifr.ifr_hwaddr.sa_data, ether.address, sizeof(ether.address));
+	if(ioctl(skfd, SIOCSIFHWADDR, &ifr) < 0) {
+		logger(MOD_IF, 1, "Socket Set MAC Address failed - %m\n");
+		return -1;
+	}
+	
+	close(skfd);
+	
 	addRead(ifd,do_read);
 	return 1;
 }
