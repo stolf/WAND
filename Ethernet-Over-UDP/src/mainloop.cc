@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.5 2002/04/17 12:13:18 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.6 2002/07/07 04:31:22 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -67,7 +67,7 @@ void mainloop(void)
 	}
 	while(1) {
 		rfd2=rfd;
-		select(highestfd+1,&rfd2,NULL,NULL,NULL);
+		select(highestfd+2,&rfd2,NULL,NULL,NULL);
 		for (fd2callback_t::const_iterator i=fd2callback.begin();
 		     i!=fd2callback.end();
 		     i++)
