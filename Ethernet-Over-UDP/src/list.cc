@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.12 2003/01/19 03:05:34 jimmyish Exp $
+ * $Id: list.cc,v 1.13 2003/02/13 10:50:02 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -20,6 +20,8 @@
 #include <netinet/in.h>
 
 online_t online;
+
+bool operator !=(struct sockaddr_in a,struct sockaddr_in b) { return a.sin_port != b.sin_port || a.sin_addr.s_addr != b.sin_addr.s_addr || a.sin_family != b.sin_family; };
 
 bool operator ==(const struct sockaddr_in a, const struct sockaddr_in b)
 {
@@ -138,7 +140,6 @@ int dump_table( FILE *stream )
 int main(int argc,char **argv)
 {
 	struct sockaddr_in test, test2;
-
 	test.sin_family = AF_INET;
 	test2.sin_family = AF_INET;
 	test.sin_port = 0;
