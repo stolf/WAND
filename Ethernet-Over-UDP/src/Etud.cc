@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.44 2002/11/30 23:55:42 jimmyish Exp $
+ * $Id: Etud.cc,v 1.45 2002/12/01 00:00:54 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -183,6 +183,7 @@ int main(int argc,char **argv)
 	
 	logger(MOD_INIT, 15, "Parsed config, about to load driver\n");
 	if (!load_module(module)) {
+		logger(MOD_INIT, 1, "Failed to load driver.\n");
 		logger(MOD_INIT, 1, "Aborting...\n");
 		return 1;
 	}
@@ -205,6 +206,7 @@ int main(int argc,char **argv)
 	logger(MOD_INIT, 15, "UDP started, about to start UNIX domain socket\n");
 	if (ui_setup()<0) {
 		logger(MOD_INIT, 1, "Failed to create unix domain socket.\n");
+		logger(MOD_INIT, 1, "Aborting...\n");
 		shutdown_interface();
 		return 1;
 	}
