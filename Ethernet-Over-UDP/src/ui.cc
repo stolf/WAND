@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.19 2002/11/30 08:27:26 isomer Exp $
+ * $Id: ui.cc,v 1.20 2002/11/30 08:31:38 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -70,10 +70,8 @@ static void m_getmac(int fd,char **argv,int argc)
 {
 	char tbuff[80];
 	sprintf(tbuff,"+GETMAC %s\r\n", macaddr);
-	printf("+GETMAC %s\r\n", macaddr);
 	ui_send(fd, tbuff);
 	ui_send(fd, "-OK\r\n");
-	printf("-OK\r\n");
 
 }
 
