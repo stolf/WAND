@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.14 2003/03/08 22:06:15 isomer Exp $
+ * $Id: list.cc,v 1.15 2003/04/09 09:50:37 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -110,7 +110,11 @@ sockaddr_in *find_ip(ether_t ether)
     }
     ++i;
   }
-  logger(MOD_LIST, 15, "find_ip() = %x\n", found->sin_addr);
+
+  if (found)
+  	logger(MOD_LIST, 15, "find_ip() = %x\n", found->sin_addr);
+  else
+	logger(MOD_LIST, 15, "find_ip() = NULL\n");
   return found;
 }
 
