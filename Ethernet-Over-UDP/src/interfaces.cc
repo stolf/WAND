@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.16 2002/12/07 00:48:35 cuchulain Exp $
+ * $Id: interfaces.cc,v 1.17 2002/12/20 05:20:13 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -113,7 +113,7 @@ int init_interface(void)
   }
   /* remove the NOARP, set the MULTICAST flags */
   ifr.ifr_flags &= ~IFF_NOARP;
-  ifr.ifr_flags != IFF_MULTICAST;
+  ifr.ifr_flags |= IFF_MULTICAST;
   
   /* commit changes */
   if (ioctl(skfd, SIOCSIFFLAGS, &ifr) < 0) {
