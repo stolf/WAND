@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.h,v 1.6 2002/10/07 09:31:44 mattgbrown Exp $
+ * $Id: debug.h,v 1.7 2002/11/30 04:45:52 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -72,6 +72,7 @@ void logger(int module, int level, const char *format, ...);
 #define MOD_IPC 4	/* wand <-> etud IPC control */
 #define MOD_NETWORK 5	/* Anything related to the networking code */
 #define MOD_IF 6	/* Anything related to the interfaces code */
+#define MOD_LIST 7	/* All the stuff to do with etud's list code */
 
 #ifdef __cplusplus
 }
