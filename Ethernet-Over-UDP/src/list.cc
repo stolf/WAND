@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.9 2001/10/26 12:37:13 gsharp Exp $
+ * $Id: list.cc,v 1.10 2001/10/27 01:48:52 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -56,9 +56,9 @@ bool add_ip(ether_t ether,ip_t ip)
 	  return false;
 	} else { /* node has changed, update it */
 	  (*i).second = ip;
-	  DPRINTF( "\nadd_ip() Changed (will return f)\n" );
+	  DPRINTF( "\nadd_ip() Changed (will return T)\n" );
 	  DUMP();
-	  return false;
+	  return true;
 	}
       }
       ++i;
