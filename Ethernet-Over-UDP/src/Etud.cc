@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.23 2002/10/07 09:46:37 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.24 2002/10/07 10:57:32 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -45,9 +45,9 @@ int main(int argc,char **argv)
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
 		{ "daemonise", TYPE_BOOL|TYPE_NULL, &do_daemonise },
-		{ "debug_MOD_INIT", TYPE_INT, &modtolevel[MOD_INIT]},
-		{ "debug_MOD_IPC", TYPE_INT, &modtolevel[MOD_IPC]},
-		{ "debug_MOD_DRIVERS", TYPE_INT, &modtolevel[MOD_DRIVERS]},
+		{ "debug_MOD_INIT", TYPE_INT|TYPE_NULL, &modtolevel[MOD_INIT]},
+		{ "debug_MOD_IPC", TYPE_INT|TYPE_NULL, &modtolevel[MOD_IPC]},
+		{ "debug_MOD_DRIVERS", TYPE_INT|TYPE_NULL, &modtolevel[MOD_DRIVERS]},
 		{ NULL, 0, NULL }
 	};
 
@@ -56,7 +56,7 @@ int main(int argc,char **argv)
 	while((ch = getopt(argc, argv, "f:")) != -1){
 	  switch(ch)
 	    {	
-	    case 'h':
+	    case 'f':
 	      conffile = strdup(optarg);
 	    }
 	}

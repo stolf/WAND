@@ -1,7 +1,7 @@
 /* 
  *  WANd Project - Ethernet Over UDP
  * 
- *  $Id: tuntap.c,v 1.3 2002/08/06 10:51:54 mattgbrown Exp $
+ *  $Id: tuntap.c,v 1.4 2002/10/07 10:57:30 mattgbrown Exp $
  *
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
@@ -30,6 +30,7 @@
 #include <linux/if_tun.h>
 
 #include "driver.h"
+#include "debug.h"
 
 static char tapdevname[32];
 static int fd = -1;
@@ -40,7 +41,7 @@ static int tuntap_setup(char *req_name) {
 
 	strcpy(tapdevname, req_name);
 
-	printf("tuntap_setup () entered...\n");
+	logger(MOD_DRIVERS, 7, "tuntap_setup () entered...\n");
 	
 	fd = 0;
 
@@ -59,7 +60,7 @@ static int tuntap_setup(char *req_name) {
 		      return -1;
 		}
 		
-		fprintf(stderr, "Interface is: %s\n", ifr.ifr_name); 
+		logger(MOD_DRIVERS, 7, "Interface is: %s\n", ifr.ifr_name); 
 		return fd;
 	}
 	return 0;
@@ -119,7 +120,7 @@ static int tuntap_down(void)
 
 static struct interface_t tuntap = {
         "tuntap",
-        "$Id: tuntap.c,v 1.3 2002/08/06 10:51:54 mattgbrown Exp $",
+        "$Id: tuntap.c,v 1.4 2002/10/07 10:57:30 mattgbrown Exp $",
         tuntap_setup,
         tuntap_down, 
         tuntap_read, 
