@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.12 2002/07/07 09:37:59 jimmyish Exp $
+ * $Id: ethertap.c,v 1.13 2002/07/07 09:50:26 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -67,13 +67,14 @@ static int ethertap_setup(char *req_name)
 	}
 	
 	if(fd < 0){
+		logger(MOD_DRV, 1, "Can't open ethertap device, aborting.\n");
 		return -1;
 	}
 	
-	logger(MOD_DRV, 1, "Can't open ethertap device, aborting.\n");
 	
 	if(ioctl(fd, SIOCSIFNAME, ifname, strlen(ifname)) < 0){
-		logger(MOD_DRV, 1, "Could not rename ethertap interface to %s.\n", 
+		logger(MOD_DRV, 1, 
+				"Could not rename ethertap interface to %s - %m.\n", 
 				ifname);
 		return -1;
 	}
@@ -126,7 +127,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.12 2002/07/07 09:37:59 jimmyish Exp $",
+	"$Id: ethertap.c,v 1.13 2002/07/07 09:50:26 jimmyish Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
