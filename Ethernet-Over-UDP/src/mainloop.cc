@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.17 2002/11/30 08:28:59 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.18 2002/11/30 08:50:36 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -48,6 +48,8 @@ int add_sig_hnd( void )
 	
 	/* Add a handler to SIGTERM */
 	handler.sa_handler = &sig_hnd;
+	handler.sa_flags = SA_RESTART;
+
 	sigemptyset(&handler.sa_mask);
 	if (sigaction(SIGTERM, &handler, NULL) < 0) {
 	  	logger(MOD_INIT, 3 , "Failed to add signal handler:"
