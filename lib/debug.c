@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.c,v 1.8 2002/07/07 09:37:59 jimmyish Exp $
+ * $Id: debug.c,v 1.9 2002/07/07 09:41:26 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -41,7 +41,7 @@ void logger(int module, int level, const char *format, ...)
 	 */
 	
 	assert(level <= 15 && level >= 0);
-	assert(module <= 6 && module >= 0);
+	assert(module <= 7 && module >= 0);
 	assert(daemonised == 0 || daemonised == 1);
 	assert(modtolevel[module] <= 15 && modtolevel[module] >= 0);
 	
