@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.8 2002/11/30 04:03:13 mattgbrown Exp $
+ * $Id: daemons.c,v 1.9 2002/12/20 02:58:22 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -75,6 +75,9 @@ void daemonise(char *name)
 	rv = open("/dev/null",O_RDONLY);
 	assert(rv == 0);
 	rv = open("/dev/console",O_WRONLY);
+	if (rv == -1) {
+		rv=open("/dev/null",O_WRONLY);
+	}
 	assert(rv == 1);
 	rv = dup(rv);
 	assert(rv == 2);
