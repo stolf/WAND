@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.24 2003/07/21 06:35:17 jspooner Exp $
+ * $Id: ethertap.c,v 1.25 2004/01/26 08:09:07 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -21,9 +21,7 @@
  *                    devices
  */
  
-#ifndef LINUX
 #include <sys/types.h>
-#endif LINUX
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
@@ -176,7 +174,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.24 2003/07/21 06:35:17 jspooner Exp $",
+	"$Id: ethertap.c,v 1.25 2004/01/26 08:09:07 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
