@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.14 2002/11/30 09:56:02 mattgbrown Exp $
+ * $Id: interfaces.cc,v 1.15 2002/12/07 00:22:49 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -104,8 +104,16 @@ int init_interface(void)
 		logger(MOD_IF, 1, "Socket Set MAC Address failed - %m\n");
 		return -1;
 	}
-	/* Set NOARP and MULTICAST on the interface */
+	/* Set ARP and MULTICAST on the interface */
 	
+  /* Set MTU on the interface  */
+  ifr.ifr_mtu = mtu; 
+  if(ioctl(skfd, SIOCSIFMTU, &ifr) < 0) {
+    logger(MOD_IF, 1, "Socket Set MTU failed - %m\n");
+    return -1;
+  }
+  
+  
 	close(skfd);
 	
 	addRead(ifd,do_read);
