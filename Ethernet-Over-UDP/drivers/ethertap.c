@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.17 2002/07/07 11:04:47 jimmyish Exp $
+ * $Id: ethertap.c,v 1.18 2002/07/07 11:13:15 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -45,9 +45,15 @@ static int ethertap_setup(char *req_name)
 {
 	char tapdevice[16];
 	int tapdevno = FIRST_TAP_NUMBER;
+	int skfd;
 	struct ifreq ifr;
-	int ret;
-	
+
+    	/* Open a socket so we can ioctl() */
+        if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                logger(MOD_DRV, 1, "Socket create failed - %m\n");
+                return -1;
+        }
+		
 	logger(MOD_DRV, 15, "ethertap_setup() entered...\n");
 
 
@@ -78,8 +84,7 @@ static int ethertap_setup(char *req_name)
 	snprintf(ifr.ifr_name, IFNAMSIZ, "tap%d", tapdevno);
 	snprintf(ifr.ifr_newname, IFNAMSIZ, "%s", ifname);
 	
-	if((ret = ioctl(fd, SIOCSIFNAME, &ifr)) < 0){
-		printf("Errno: %d, Ret: %d", errno, ret);
+	if(ioctl(skfd, SIOCSIFNAME, &ifr) < 0){
 		logger(MOD_DRV, 1, 
 				"Could not rename ethertap interface to %s - %m.\n", 
 				ifname);
@@ -134,7 +139,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.17 2002/07/07 11:04:47 jimmyish Exp $",
+	"$Id: ethertap.c,v 1.18 2002/07/07 11:13:15 jimmyish Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
