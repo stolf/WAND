@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.38 2002/11/30 09:45:27 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.39 2002/11/30 09:49:03 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -67,7 +67,7 @@ int main(int argc,char **argv)
 	char *cmodule=NULL;
 	char *cpidfile=NULL;
 	int cdo_daemonise=1;
-	int cudp_port=-1;
+	int cudpport=-1;
 	
 	/* Possible config file options */
 	config_t main_config[] = {
@@ -139,8 +139,8 @@ int main(int argc,char **argv)
 		pidfile = strdup(cpidfile);
 	if (cdo_daemonise == 0)
 		do_daemonise = 0;
-	if (cudp_port != -1)
-		udp_port = cudp_port;
+	if (cudpport != -1)
+		udpport = cudpport;
 		
 	/* Check that a MAC address has been specified */
 	if (macaddr == NULL) {
