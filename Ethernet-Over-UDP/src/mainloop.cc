@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.19 2002/11/30 08:55:52 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.20 2002/11/30 08:57:42 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -100,7 +100,7 @@ void mainloop(void)
 	  rfd2=rfd;
 	  timeout.tv_sec = 1;
 	  foo = select(highestfd+2, &rfd2, NULL, NULL, &timeout);
-	  logger(MOD_IPC, 1, "Select returned %d\n", foo);
+	  logger(MOD_IPC, 1, "Select returned %d, errno: %m\n", foo);
 	  for (fd2callback_t::const_iterator i=fd2callback.begin(); 
 	       i!=fd2callback.end(); 
 	       i++) {
