@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.10 2002/11/30 03:27:02 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.11 2002/11/30 03:35:14 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -101,7 +101,6 @@ void mainloop(void)
 	       i++) {
 	    
 	    if (FD_ISSET(i->first,&rfd2)) {
-				printf("Descriptor %u is set...\n", i->first);
 	      i->second(i->first);
 	    }
 	    if (endloop) {
