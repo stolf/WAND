@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.3 2002/04/17 12:13:19 jimmyish Exp $
+ * $Id: daemons.c,v 1.4 2002/07/07 03:54:13 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -9,6 +9,7 @@
 #include <fcntl.h> /* for creat,open */
 #include <stdio.h> /* for snprintf */
 #include <syslog.h> /* for openlog */
+#include <string.h> /* for strrchr */
 
 #include "daemons.h"
 
@@ -40,6 +41,7 @@ void put_pid( char *fname )
 
 void daemonise(char *name) 
 {
+	
 	switch (fork()) {
 	case 0:
 		break;
@@ -69,5 +71,7 @@ void daemonise(char *name)
 	open("/dev/console",O_WRONLY);
 	daemonised = 1;
 
+	name = strrchr(name,'/') ? strrchr(name,'/') : name;
+	
 	openlog(name, LOG_PID, LOG_DAEMON);
 }	
