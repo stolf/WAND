@@ -1,5 +1,5 @@
 /* Wand Project - client
- * $Id: client.cc,v 1.6 2001/10/25 11:38:58 gsharp Exp $
+ * $Id: client.cc,v 1.7 2001/10/25 11:41:31 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -138,6 +138,9 @@ int display_reply( char *buffer )
 	
 	if( strlen( buffer ) <= 1 ) {
 		printf("Boring / Blank line from server. no fun.\n");
+		printf( "please strace this program and if you get this"
+		        "message again, send me a copy of the output!\n"
+			" -- Gerard\n" );
 		return 0;
 	}
 
