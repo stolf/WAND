@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: udp.cc,v 1.5 2002/11/30 05:22:53 jimmyish Exp $
+ * $Id: udp.cc,v 1.6 2002/11/30 23:25:25 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -19,7 +19,7 @@
 #include "debug.h"
 
 int udpfd;
-int udpport;
+int udpport = 22222;
 
 int udp_read(int udpfd,char *buffer,int size)
 {
