@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.5 2002/07/07 03:57:30 jimmyish Exp $
+ * $Id: daemons.c,v 1.6 2002/07/07 05:37:24 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -10,6 +10,7 @@
 #include <stdio.h> /* for snprintf */
 #include <syslog.h> /* for openlog */
 #include <string.h> /* for strrchr */
+#include <stdlib.h> 
 
 #include "daemons.h"
 
