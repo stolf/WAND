@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.45 2002/12/01 00:00:54 jimmyish Exp $
+ * $Id: Etud.cc,v 1.46 2002/12/02 02:14:58 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -33,6 +33,7 @@ char *ifname=NULL;
 
 int load_module(char *filename)
 {
+	printf("I got here\n");
 	if(!dlopen(filename,RTLD_NOW)) {
 		logger(MOD_INIT, 1, "Error loading module '%s': %s\n",
 				filename , dlerror());
@@ -98,7 +99,7 @@ int main(int argc,char **argv)
 
 	// Parse command line arguments
 	char ch;
-	while((ch = getopt(argc, argv, "c:dDf:hi:l:m:p:")) != -1){
+	while((ch = getopt(argc, argv, "c:d:Df:hi:l:m:p:")) != -1){
 	switch(ch){	
 			case 'c':
 				cctrlfile = strdup(optarg);
