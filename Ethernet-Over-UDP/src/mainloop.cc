@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.22 2002/11/30 09:37:19 isomer Exp $
+ * $Id: mainloop.cc,v 1.23 2002/11/30 10:33:27 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -95,6 +95,8 @@ void wait_for_event(fd_set &rfd)
 			logger(MOD_IPC, 4, "Select returned an"
 				" error: %s\n", strerror(errno));
 	} while (ret<0 && !endloop);
+
+	rfd = rfd2;
 
 }
 
