@@ -1,9 +1,12 @@
 /*
  *	ethertap.c
  *	Originally ipt by:  cmos	James Spooner  <james@spoons.gen.nz>
- *      Hacked for WANd by: Isomer	Perry Lorier <isomer@coders.net>
+ *      Hacked for WANd by: Isomer	Perry Lorier   <isomer@coders.net>
  *
  *	read/write/setup the ETHERTAP linux device.
+ *
+ * TODO:
+ *  Restore all flags on link 'down'.
  */
  
 #define MAX_ETHERTAP_DEVICES 16
@@ -11,7 +14,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
- #include <unistd.h>
+#include <unistd.h>
 #include <string.h>
 #include <errno.h>
 #include <sys/ioctl.h>
@@ -23,14 +26,12 @@
 
 #include "driver.h"
 
-static int fd;
+static int fd = -1;
 static int tapdevno;
 
 static int ethertap_setup(unsigned long myid) {
 	
 	struct ifreq ifr;
-	struct sockaddr_in *sin;
-	struct rtentry rte;
 	int skfd;
 	char tapdevice[16];
 
@@ -39,7 +40,7 @@ static int ethertap_setup(unsigned long myid) {
 	};
 
 	fd = 0;	
-	tapdevno = 0;
+	tapdevno = 2;
 
 	
 	memcpy(hwaddr, &(myid)+(6-sizeof(myid)), 4);
@@ -92,6 +93,7 @@ static int ethertap_setup(unsigned long myid) {
                         }
                                                         
 			close (skfd);
+			fprintf(stderr,"ethertap bound to device /dev/tap%i\n",tapdevno);
 			return fd;
 		}			
 		tapdevno++;
@@ -126,7 +128,7 @@ static int ethertap_down(void)
     	}
 
 	close(skfd);		
-	if (fd > 0) 
+	if (fd >= 0) 
 		close(fd);
 
 	return 0;
@@ -138,7 +140,6 @@ static int ethertap_read(char *frame,int length)
 	return read(fd,frame,length);
 }
 
-
 static int ethertap_write(char *frame, int sz) 
 {
 	return write(fd,frame,sz);
@@ -146,7 +147,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.1 2000/06/01 10:25:02 isomer Exp $",
+	"$Id: ethertap.c,v 1.2 2000/11/15 08:42:30 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
