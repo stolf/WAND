@@ -1,5 +1,5 @@
 /* Wand Project - client
- * $Id: client.cc,v 1.9 2002/11/30 10:22:59 mattgbrown Exp $
+ * $Id: client.cc,v 1.10 2002/11/30 10:25:38 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -117,7 +117,7 @@ int main( int argc, char *argv[] )
 
 	while( 1 ) {
 	  //	  printf( "\n!!! argv=\"%p\" \n", argv );
-		o = getopt_long( argc, argv, "hvRlcad", long_options, NULL );
+		o = getopt_long( argc, argv, "hvRlmpcad", long_options, NULL );
 		if( o == -1 )
 			break;
 		switch( o ) {
