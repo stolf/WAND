@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.9 2002/03/18 10:01:01 jimmyish Exp $
+ * $Id: ethertap.c,v 1.10 2002/04/18 11:26:24 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -39,10 +39,10 @@
 static int fd = -1;
 static int tapdevno;
 
-static int ethertap_setup(unsigned long myid) 
+static int ethertap_setup() 
 {
 	char tapdevice[16];
-	printf("ethertap_setup( %lu ) entered...\n", myid);
+	printf("ethertap_setup() entered...\n");
 
 	fd = 0;	
 	tapdevno = FIRST_TAP_NUMBER;
@@ -102,7 +102,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.9 2002/03/18 10:01:01 jimmyish Exp $",
+	"$Id: ethertap.c,v 1.10 2002/04/18 11:26:24 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,

@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: driver.h,v 1.5 2001/08/12 06:00:27 gsharp Exp $
+ * $Id: driver.h,v 1.6 2002/04/18 11:26:25 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -14,15 +14,16 @@ extern "C" {
 struct interface_t {
 	char *name;
 	char *version;
-	int (*setup)(unsigned long myid);
+	int (*setup)();
 	int (*down)(void);
 	int (*read)(char *frame,int length);
 	int (*write)(char *frame,int length);
 };
 
+extern struct interface_t *driver;
+
 void register_device(struct interface_t *interface_description);
-struct interface_t *find_interface(char *s);
-int init_interface(struct interface_t *interface,int id);
+int init_interface(void);
 void send_interface(char *buffer,int size);
 
 #ifdef __cplusplus
