@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.42 2002/11/30 23:37:58 jimmyish Exp $
+ * $Id: Etud.cc,v 1.43 2002/11/30 23:54:07 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -15,6 +15,8 @@
 #include <getopt.h> /* for parsing command line options */
 #include <syslog.h>
 #include <stdio.h>
+#include <libgen.h> /* for basename */
+
 
 #include "list.h"
 #include "driver.h"
@@ -41,17 +43,21 @@ int load_module(char *filename)
 }
 
 void usage(const char *prog) {
-	printf("%s: [-d module] 		 - Transport driver to use
-							[-D]						 - Don't daemonise
-							[-f configfile]	 - Read config from this file
-							[-h]						 - This help
-							[-i ifname]			 - Name of the interface to create 
-							[-l port]				 - Communicate on the specified port
-							[-m macaddr]		 - MAC address for the created interface
-							[-p pidfile] 		 - File to store pid in
-							Options on command line override those in the config
-							file.					
-							\n", prog);
+	char *progname;
+
+	progname=strdup(prog);
+	
+	printf("%s:	[-d module]	- Transport driver to use
+	[-D]		- Don't daemonise
+	[-f configfile]	- Read config from this file
+	[-h]		- This help
+	[-i ifname]	- Name of the interface to create 
+	[-l port]	- Communicate on the specified port
+	[-m macaddr]	- MAC address for the created interface
+	[-p pidfile]	- File to store pid in
+	
+Options on command line override those in the config file.\n", 
+	basename(progname));
 
 }
 
@@ -121,6 +127,10 @@ int main(int argc,char **argv)
 				break;
 			case 'p':
 				cpidfile = strdup(optarg);
+				break;
+			default:
+				usage(argv[0]);
+				return 1;
 				break;
 		}
 	}
