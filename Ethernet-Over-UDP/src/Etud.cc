@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.7 2001/08/12 07:27:47 gsharp Exp $
+ * $Id: Etud.cc,v 1.8 2001/08/13 03:50:10 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -109,7 +109,6 @@ int main(int arvc,char **argv)
 	cout << "Attempting to Daemonise..." << endl;
 	daemonise();
 	put_pid();
-	cout << "Returned from Daemonise sucessfully." << endl;
 
 	mainloop();
 }
