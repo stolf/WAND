@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.18 2002/07/07 04:48:18 jimmyish Exp $
+ * $Id: Etud.cc,v 1.19 2002/07/07 04:55:25 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -36,8 +36,8 @@ int load_module(char *filename)
 
 int main(int arvc,char **argv)
 {
-	char *module=NULL;
 	int do_daemonise=1;
+/*	char *module=NULL;
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
 		{ "daemonise", TYPE_BOOL|TYPE_NULL, &do_daemonise },
@@ -51,7 +51,8 @@ int main(int arvc,char **argv)
 	}
 	
 	logger(MOD_INIT, 15, "Parsed config, about to load driver\n");
-	if (!load_module(module)) {
+*/	logger(MOD_INIT, 15, "About to start load driver\n");
+	if (!load_module("/usr/local/lib/wand/drivers/ethertap.so")) {
 		logger(MOD_INIT, 1, "Aborting...\n");
 		return 1;
 	}
