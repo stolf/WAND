@@ -1,7 +1,7 @@
 /* 
  *  WANd Project - Ethernet Over UDP
  * 
- *  $Id: tuntap.c,v 1.1 2002/03/18 10:01:02 jimmyish Exp $
+ *  $Id: tuntap.c,v 1.2 2002/04/18 11:28:11 isomer Exp $
  *
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
@@ -34,7 +34,7 @@
 static char tapdevname[32];
 static int fd = -1;
 
-static int tuntap_setup(unsigned long myid) {
+static int tuntap_setup() {
 
         struct ifreq ifr;
 	int skfd;        
@@ -45,7 +45,7 @@ static int tuntap_setup(unsigned long myid) {
                 exit(1);
         }
         */
-	printf("tuntap_setup (%lu) entered...\n", myid);
+	printf("tuntap_setup () entered...\n");
 	
 	fd = 0;
 
@@ -130,7 +130,7 @@ static int tuntap_down(void)
 
 static struct interface_t tuntap = {
         "tuntap",
-        "$Id: tuntap.c,v 1.1 2002/03/18 10:01:02 jimmyish Exp $",
+        "$Id: tuntap.c,v 1.2 2002/04/18 11:28:11 isomer Exp $",
         tuntap_setup,
         tuntap_down, 
         tuntap_read, 
