@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.41 2002/11/30 11:10:01 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.42 2002/11/30 23:37:58 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -27,7 +27,7 @@
 
 extern int modtolevel[];
 char *macaddr=NULL;
-char *ifname="wan0";
+char *ifname=NULL;
 
 int load_module(char *filename)
 {
@@ -166,7 +166,11 @@ int main(int argc,char **argv)
 		sprintf(buf, "/var/run/Etud.%s.ctrl", ifname);
 		ctrlfile = strdup(buf);
 	}
-
+	/* Check that ifname is set */
+	if (ifname == NULL) {
+		ifname = strdup("wan0");
+	}
+	
 	logger(MOD_INIT, 15, "Parsed config, about to load driver\n");
 	if (!load_module(module)) {
 		logger(MOD_INIT, 1, "Aborting...\n");
