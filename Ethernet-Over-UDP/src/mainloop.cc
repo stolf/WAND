@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.3 2001/08/14 00:28:48 gsharp Exp $
+ * $Id: mainloop.cc,v 1.4 2001/09/09 00:32:02 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -39,10 +39,13 @@ int add_sig_hnd( void )
 	struct sigaction handler;
   
 	/* Assign our_sig_hnd as our signal handler */
-	handler.sa_handler = our_sig_hnd;
+	handler.sa_handler = SIG_IGN;
   
 	/* We don't want to block any other signals while handling this one */
 	sigemptyset(&handler.sa_mask);
+
+	/* Continously ignore this */
+	handler.sa_flags = SA_RESTART;
 
 	/* Make these values effective. */
 	if (sigaction(SIGPIPE, &handler, NULL) < 0) {
