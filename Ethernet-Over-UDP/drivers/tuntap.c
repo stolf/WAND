@@ -1,7 +1,7 @@
 /* 
  *  WANd Project - Ethernet Over UDP
  * 
- *  $Id: tuntap.c,v 1.6 2002/11/30 04:52:51 cuchulain Exp $
+ *  $Id: tuntap.c,v 1.7 2003/02/02 10:46:02 isomer Exp $
  *
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
@@ -62,6 +62,9 @@ static int tuntap_setup(char *req_name) {
 		
 		logger(MOD_DRIVERS, 7, "Interface is: %s\n", ifr.ifr_name); 
 		return fd;
+	} else {
+		logger(MOD_DRIVERS, 6, "/dev/net/tun could not be opened, does the file exist, and is tuntap support\n");
+		logger(MOD_DRIVERS, 6, "included in the kernel?\n");
 	}
 	return 0;
 }
@@ -121,7 +124,7 @@ static int tuntap_down(void)
 
 static struct interface_t tuntap = {
         "tuntap",
-        "$Id: tuntap.c,v 1.6 2002/11/30 04:52:51 cuchulain Exp $",
+        "$Id: tuntap.c,v 1.7 2003/02/02 10:46:02 isomer Exp $",
         tuntap_setup,
         tuntap_down, 
         tuntap_read, 
@@ -132,10 +135,3 @@ static struct interface_t tuntap = {
 void _init(void) {
         register_device(&tuntap);
 }
-        
-
-
-
-
-
-
