@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.13 2003/02/13 10:50:02 isomer Exp $
+ * $Id: list.cc,v 1.14 2003/03/08 22:06:15 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -92,7 +92,7 @@ bool rem_ip(ether_t ether)
 
 sockaddr_in *find_ip(ether_t ether)
 {
-  sockaddr_in *found;
+  sockaddr_in *found = NULL;
   
   if (online.empty() ) {
     logger(MOD_LIST, 15, "find_ip() Empty\n");
