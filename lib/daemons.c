@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.6 2002/07/07 05:37:24 isomer Exp $
+ * $Id: daemons.c,v 1.7 2002/11/30 03:11:19 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -11,6 +11,7 @@
 #include <syslog.h> /* for openlog */
 #include <string.h> /* for strrchr */
 #include <stdlib.h> 
+#include <assert.h>
 
 #include "daemons.h"
 
@@ -42,6 +43,7 @@ void put_pid( char *fname )
 
 void daemonise(char *name) 
 {
+	int rv;
 	
 	switch (fork()) {
 	case 0:
@@ -67,9 +69,13 @@ void daemonise(char *name)
 	close(0);
 	close(1);
 	close(2);
-	open("/dev/null",O_RDONLY);
-	open("/dev/console",O_WRONLY);
-	open("/dev/console",O_WRONLY);
+	rv = open("/dev/null",O_RDONLY);
+	assert(rv == 0);
+	rv = open("/dev/console",O_WRONLY);
+	assert(rv == 1);
+	rv = dup(rv);
+	assert(rv == 2);
+	
 	daemonised = 1;
 
 	name = strrchr(name,'/') ? strrchr(name,'/') + 1 : name;

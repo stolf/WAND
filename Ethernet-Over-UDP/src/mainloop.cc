@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.8 2002/08/06 10:56:21 mattgbrown Exp $
+ * $Id: mainloop.cc,v 1.9 2002/11/30 03:11:19 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -64,6 +64,7 @@ void sig_hnd( int signo )
 
 void addRead(int fd,callback_t callback)
 {
+	assert(fd!=-1);
 	FD_SET(fd,&rfd);
 	fd2callback[fd]=callback;
 	if (highestfd<fd)
@@ -92,6 +93,7 @@ void mainloop(void)
 	       i++) {
 	    
 	    if (FD_ISSET(i->first,&rfd2)) {
+				printf("Descriptor %u is set...\n", i->first);
 	      i->second(i->first);
 	    }
 	    if (endloop) {
