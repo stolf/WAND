@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.cc,v 1.1 2001/08/14 00:58:52 gsharp Exp $
+ * $Id: daemons.cc,v 1.1 2001/10/27 02:18:08 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
