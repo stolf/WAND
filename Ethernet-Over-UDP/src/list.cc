@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.7 2001/10/22 12:00:33 isomer Exp $
+ * $Id: list.cc,v 1.8 2001/10/24 12:05:17 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -52,6 +52,7 @@ int main(int argc,char **argv)
 	assert(find_ip(ether) == ip_t(0x04030201));
 	assert(rem_ip(ether)!=false);
 	assert(rem_ip(ether)==false);
+	add_ip(ether,ip_t(0x04030201));
 	add_ip(ether,ip_t(0x04030201));
 	add_ip(ether2,ip_t(0x04030202));
 	assert(find_ip(ether2) == ip_t(0x04030202));
