@@ -1,3 +1,9 @@
+/* Wand Project - Ethernet Over UDP
+ * $Id: ui.cc,v 1.3 2001/08/12 06:00:27 gsharp Exp $
+ * Licensed under the GPL, see file COPYING in the top level for more
+ * details.
+ */
+
 #include <sys/types.h> /* for socket */
 #include <sys/socket.h> /* for socket */
 #include <netinet/in.h>

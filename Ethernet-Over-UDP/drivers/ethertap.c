@@ -1,3 +1,9 @@
+/* Wand Project - Ethernet Over UDP
+ * $Id: ethertap.c,v 1.5 2001/08/12 06:00:27 gsharp Exp $
+ * Licensed under the GPL, see file COPYING in the top level for more
+ * details.
+ */
+
 /*
  *	ethertap.c
  *	Originally ipt by:  cmos	James Spooner  <james@spoons.gen.nz>
@@ -145,7 +151,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.4 2001/08/04 04:40:06 isomer Exp $",
+	"$Id: ethertap.c,v 1.5 2001/08/12 06:00:27 gsharp Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
