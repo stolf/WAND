@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.10 2002/11/30 03:11:19 mattgbrown Exp $
+ * $Id: interfaces.cc,v 1.11 2002/11/30 04:04:49 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -80,6 +80,15 @@ int init_interface(void)
 	return 1;
 }
 
+int shutdown_interface(void)
+{
+	int ifd;
+	if ((ifd=driver->down())<=0) {
+		return 0;
+	}
+	remRead(ifd);
+	return 1;
+}
 void send_interface(char *buffer,int size)
 {
 	driver->write(buffer,size);

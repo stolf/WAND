@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.25 2002/11/30 03:11:19 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.26 2002/11/30 04:04:49 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -125,9 +125,10 @@ int main(int argc,char **argv)
 	mainloop();
  	// Clean up the control file
 	unlink("/var/run/Etud.ctrl");
-      // Clean up the pid file
-      if (do_daemonise) {
+      	// Clean up the pid file
+      	if (do_daemonise) {
             unlink(pidfile);
-      }
-      
+      	}
+      	// shutdown the interface
+	shutdown_interface();
 }
