@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.15 2002/11/30 05:02:56 cuchulain Exp $
+ * $Id: mainloop.cc,v 1.16 2002/11/30 05:54:46 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -14,7 +14,7 @@
 #include "debug.h"
 #include "mainloop.h"
 
-typedef map<int,callback_t> fd2callback_t;
+typedef std::map<int,callback_t> fd2callback_t;
 
 static fd2callback_t fd2callback;
 

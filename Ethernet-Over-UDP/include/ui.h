@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.h,v 1.2 2001/08/12 06:00:27 gsharp Exp $
+ * $Id: ui.h,v 1.3 2002/11/30 05:54:45 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -13,3 +13,4 @@ int ui_process_request(int fd);
 int ui_send(int sock,char *msg);
 
 #endif
+

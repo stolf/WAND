@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.h,v 1.3 2002/08/06 10:53:37 mattgbrown Exp $
+ * $Id: mainloop.h,v 1.4 2002/11/30 05:54:45 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -14,3 +14,4 @@ void mainloop(void);
 void sig_hnd( int signo );
 
 #endif
+

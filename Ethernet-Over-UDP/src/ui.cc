@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.13 2002/07/07 04:24:25 jimmyish Exp $
+ * $Id: ui.cc,v 1.14 2002/11/30 05:54:46 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -170,7 +170,7 @@ static void ui_callback(int fd)
 	}
 }
 
-int ui_setup(char *s="/var/run/Etud.ctrl")
+int ui_setup(char *s)
 {
 	int fd=socket(PF_UNIX,SOCK_STREAM,0);
 	if (fd<0) {
