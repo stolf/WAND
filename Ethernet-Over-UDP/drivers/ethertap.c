@@ -40,7 +40,7 @@ static int ethertap_setup(unsigned long myid) {
 	};
 
 	fd = 0;	
-	tapdevno = 2;
+	tapdevno = 0;
 
 	
 	memcpy(hwaddr, &(myid)+(6-sizeof(myid)), 4);
@@ -145,7 +145,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.3 2000/11/17 02:22:06 isomer Exp $",
+	"$Id: ethertap.c,v 1.4 2001/08/04 04:40:06 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
