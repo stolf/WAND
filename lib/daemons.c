@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.4 2002/07/07 03:54:13 jimmyish Exp $
+ * $Id: daemons.c,v 1.5 2002/07/07 03:57:30 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -71,7 +71,7 @@ void daemonise(char *name)
 	open("/dev/console",O_WRONLY);
 	daemonised = 1;
 
-	name = strrchr(name,'/') ? strrchr(name,'/') : name;
+	name = strrchr(name,'/') ? strrchr(name,'/') + 1 : name;
 	
 	openlog(name, LOG_PID, LOG_DAEMON);
 }	
