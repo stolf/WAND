@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.c,v 1.4 2002/04/18 11:26:25 isomer Exp $
+ * $Id: debug.c,v 1.5 2002/04/18 12:20:33 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -57,7 +57,6 @@ void logger(int module, int level, const char *format, ...)
 		} else {
 			vsnprintf(buffer, sizeof(buffer), format, ap);
 			syslog(loglookup[level], "%s", buffer);
-			free(buffer);
 		}
 	}
 
