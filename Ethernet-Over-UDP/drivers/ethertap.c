@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap.c,v 1.25 2004/01/26 08:09:07 isomer Exp $
+ * $Id: ethertap.c,v 1.26 2005/02/09 11:00:45 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -100,7 +100,7 @@ static int ethertap_setup(char *req_name)
 	}
 
 	logger(MOD_DRIVERS, 15, "Ethertap interface renamed to %s.\n", ifname);
-#endif LINUX
+#endif /*LINUX*/
 	logger(MOD_DRIVERS, 15, "ethertap_setup() completed...\n");
 
 	return fd;
@@ -141,7 +141,7 @@ static int ethertap_down(void)
 			ifname, strerror(errno));
 		return -1;
 	}
-#endif LINUX
+#endif /*LINUX*/
 
 	close(skfd);		
 	if (fd >= 0) 
@@ -174,7 +174,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.25 2004/01/26 08:09:07 isomer Exp $",
+	"$Id: ethertap.c,v 1.26 2005/02/09 11:00:45 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
