@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.h,v 1.3 2002/04/17 12:13:18 jimmyish Exp $
+ * $Id: daemons.h,v 1.4 2002/11/30 10:07:50 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -15,6 +15,7 @@ extern "C" {
 void put_pid( char *fname );
 void daemonise( char *name ) ;
 
+extern int daemonised;
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.c,v 1.10 2002/11/30 04:45:52 jimmyish Exp $
+ * $Id: debug.c,v 1.11 2002/11/30 10:07:50 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -11,6 +11,7 @@
 #include <assert.h> /* assert */
 
 #include "debug.h"
+#include "daemons.h"
 
 static int loglookup[]={LOG_ALERT, LOG_ALERT, LOG_CRIT, LOG_ERR, LOG_WARNING,
 		 LOG_NOTICE, LOG_INFO, LOG_DEBUG, LOG_DEBUG, LOG_DEBUG,
