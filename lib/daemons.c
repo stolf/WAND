@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.cc,v 1.1 2002/03/18 10:36:01 jimmyish Exp $
+ * $Id: daemons.c,v 1.1 2002/03/18 13:07:30 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -10,6 +10,12 @@
 #include <stdio.h> /* for snprintf */
 
 #include "daemons.h"
+
+/* Flag set if we are a daemon or not. If we are then set to one. Used
+ * to tell if we should send output to screen or syslog.
+ */
+
+int daemonised = 0;
 
 void put_pid( char *fname )
 {
