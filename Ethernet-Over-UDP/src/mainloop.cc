@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.6 2002/07/07 04:31:22 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.7 2002/07/07 04:38:53 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -9,6 +9,7 @@
 #include <signal.h> /* for sigaction (call and struct) */
 #include <stdio.h> /* for fprintf and perror */
 #include <map>
+#include "debug.h"
 #include "mainloop.h"
 
 typedef map<int,callback_t> fd2callback_t;
@@ -50,6 +51,7 @@ void addRead(int fd,callback_t callback)
 	fd2callback[fd]=callback;
 	if (highestfd<fd)
 		highestfd=fd;
+	logger(MOD_IPC, 15, "Added fd %d, highest fd = %d\n", fd, highestfd);
 }
 
 void remRead(int fd)
