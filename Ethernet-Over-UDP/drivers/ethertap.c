@@ -73,10 +73,8 @@ static int ethertap_setup(unsigned long myid) {
 			       	perror("SIOCSIFFLAGS");
        	 			return -1;
     			}
-			
+#if 0			
 			/* Set the HWADDR */
-			
-			
 			ifr.ifr_netmask.sa_family = ARPHRD_ETHER;
 
 			memcpy(ifr.ifr_netmask.sa_data, hwaddr, 6);
@@ -84,7 +82,7 @@ static int ethertap_setup(unsigned long myid) {
             			perror("SIOCSIFHWADDR");
         			return -1;
     			}
-    			
+#endif    			
 			/* MTU is 576 */
 			ifr.ifr_mtu = 576;
             		if (ioctl(skfd, SIOCSIFMTU, &ifr) < 0) {
@@ -147,7 +145,7 @@ static int ethertap_write(char *frame, int sz)
 
 static struct interface_t ethertap = {
 	"ethertap",
-	"$Id: ethertap.c,v 1.2 2000/11/15 08:42:30 isomer Exp $",
+	"$Id: ethertap.c,v 1.3 2000/11/17 02:22:06 isomer Exp $",
 	ethertap_setup,
 	ethertap_down,
 	ethertap_read,
