@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.11 2002/11/30 04:04:49 cuchulain Exp $
+ * $Id: interfaces.cc,v 1.12 2002/11/30 05:22:53 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -37,7 +37,7 @@ static void udp_sendto(ip_t ip,char *buffer,int size)
 {
 	struct sockaddr_in dest;
 	dest.sin_family = AF_INET;
-	dest.sin_port=htons(UDPPORT);
+	dest.sin_port=htons(udpport);
 	dest.sin_addr.s_addr=ip;
 	sendto(udpfd,buffer,size,0,(const struct sockaddr *)&dest,sizeof(dest));
 }
