@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.18 2002/11/30 08:50:36 jimmyish Exp $
+ * $Id: mainloop.cc,v 1.19 2002/11/30 08:55:52 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -87,7 +87,8 @@ void mainloop(void)
 {
 	fd_set rfd2;
 	struct timeval timeout;
-
+	int foo;
+	
 	timeout.tv_sec = 1;
 	timeout.tv_usec = 0;
 	
@@ -98,7 +99,8 @@ void mainloop(void)
 	while(!endloop) {
 	  rfd2=rfd;
 	  timeout.tv_sec = 1;
-	  select(highestfd+2, &rfd2, NULL, NULL, &timeout);
+	  foo = select(highestfd+2, &rfd2, NULL, NULL, &timeout);
+	  logger(MOD_IPC, 1, "Select returned %d\n", foo);
 	  for (fd2callback_t::const_iterator i=fd2callback.begin(); 
 	       i!=fd2callback.end(); 
 	       i++) {
