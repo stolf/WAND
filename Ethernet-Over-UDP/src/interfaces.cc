@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.15 2002/12/07 00:22:49 cuchulain Exp $
+ * $Id: interfaces.cc,v 1.16 2002/12/07 00:48:35 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -104,8 +104,23 @@ int init_interface(void)
 		logger(MOD_IF, 1, "Socket Set MAC Address failed - %m\n");
 		return -1;
 	}
+  
 	/* Set ARP and MULTICAST on the interface */
-	
+  /* Read the current flags on the interface */
+  if (ioctl(skfd, SIOCGIFFLAGS, &ifr) < 0) {
+    logger(MOD_IF, 1, "Get Flags failed on device - %m\n");
+    return -1;
+  }
+  /* remove the NOARP, set the MULTICAST flags */
+  ifr.ifr_flags &= ~IFF_NOARP;
+  ifr.ifr_flags != IFF_MULTICAST;
+  
+  /* commit changes */
+  if (ioctl(skfd, SIOCSIFFLAGS, &ifr) < 0) {
+    logger(MOD_IF, 1, "Set Flags failed on device - %m\n");
+    return -1;
+  }
+  
   /* Set MTU on the interface  */
   ifr.ifr_mtu = mtu; 
   if(ioctl(skfd, SIOCSIFMTU, &ifr) < 0) {
