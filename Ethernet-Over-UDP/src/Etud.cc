@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.43 2002/11/30 23:54:07 jimmyish Exp $
+ * $Id: Etud.cc,v 1.44 2002/11/30 23:55:42 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -171,14 +171,14 @@ int main(int argc,char **argv)
 		logger(MOD_INIT, 1, "No MAC Address specified!\n");
 		return 1;
 	}
+	/* Check that ifname is set */
+	if (ifname == NULL) {
+		ifname = strdup("wan0");
+	}
 	/* Check that a control file has been specified */
 	if (ctrlfile == NULL) {
 		sprintf(buf, "/var/run/Etud.%s.ctrl", ifname);
 		ctrlfile = strdup(buf);
-	}
-	/* Check that ifname is set */
-	if (ifname == NULL) {
-		ifname = strdup("wan0");
 	}
 	
 	logger(MOD_INIT, 15, "Parsed config, about to load driver\n");
