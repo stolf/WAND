@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: interfaces.cc,v 1.8 2002/07/07 05:07:01 jimmyish Exp $
+ * $Id: interfaces.cc,v 1.9 2002/07/07 09:37:59 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -73,7 +73,7 @@ static void do_read(int fd)
 int init_interface(void)
 {
 	int ifd;
-	if ((ifd=driver->setup())<0) {
+	if ((ifd=driver->setup("wan0"))<0) {
 		return 0;
 	}
 	addRead(ifd,do_read);

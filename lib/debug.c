@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: debug.c,v 1.7 2002/04/18 12:34:54 jimmyish Exp $
+ * $Id: debug.c,v 1.8 2002/07/07 09:37:59 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -25,7 +25,7 @@ static int loglookup[]={LOG_ALERT, LOG_ALERT, LOG_CRIT, LOG_ERR, LOG_WARNING,
  * really really wants to set these higher !
  */
 
-int modtolevel[]= {15, 15, 15, 15, 15, 15, 7};
+int modtolevel[]= {15, 15, 15, 15, 15, 15, 7, 15};
 
 extern int daemonised;
 

@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: driver.h,v 1.6 2002/04/18 11:26:25 isomer Exp $
+ * $Id: driver.h,v 1.7 2002/07/07 09:37:59 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -11,10 +11,19 @@
 extern "C" {
 #endif
 
+/* The following should be in <sys/ioctls.h> but it isn't.
+ *
+ * It is in <linux/sockios.h> but including that directly isn't a cool idea !
+ *
+ */
+	
+#define SIOCSIFNAME     0x8923          /* set interface name */
+
+	
 struct interface_t {
 	char *name;
 	char *version;
-	int (*setup)();
+	int (*setup)(char *req_name);
 	int (*down)(void);
 	int (*read)(char *frame,int length);
 	int (*write)(char *frame,int length);
