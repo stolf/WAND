@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.4 2001/08/12 10:38:14 gsharp Exp $
+ * $Id: ui.cc,v 1.5 2001/08/13 07:35:47 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -72,7 +72,7 @@ void ui_process_callback(int fd)
 			return;
 		}
 		add_ip(ether,ip);
-		ui_send(fd,"+OK added");
+		ui_send(fd,"-OK added");
 		return;
 	}
 
@@ -83,7 +83,7 @@ void ui_process_callback(int fd)
 			ui_send(fd,"-ERR MAC address does not grok");
 		}
 		rem_ip(ether);
-		ui_send(fd,"+OK deleted");
+		ui_send(fd,"-OK deleted");
 		return;
 	}
 
