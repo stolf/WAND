@@ -1,10 +1,7 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ethertap_cfg.h.sample,v 1.1 2001/10/23 09:23:48 gsharp Exp $
+ * $Id: ethertap_cfg.h,v 1.1 2002/10/07 09:31:44 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
- *
- * <wuz> do NOT check in ethertap_cfg.h directly. play with
- *       ethertap_cfg.h.sample and check THAT in!
  */
         
 #ifndef ETHERTAP_CFG_H
