@@ -1,5 +1,5 @@
 /* Wand Project - Protocol Overlay
- * $Id: protoverlay.c,v 1.2 2001/10/27 14:06:06 gsharp Exp $
+ * $Id: protoverlay.c,v 1.1 2002/03/18 10:36:01 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
