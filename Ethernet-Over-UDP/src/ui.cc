@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.18 2002/11/30 08:24:10 mattgbrown Exp $
+ * $Id: ui.cc,v 1.19 2002/11/30 08:27:26 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -126,7 +126,7 @@ static int parse(char *line,char **argv,int argc)
 		if (*line == ' ') {
 			*line='\0';
 			arg++;
-			argv[arg] = line;
+			argv[arg] = line+1;
 		}
 		line++;
 	}
