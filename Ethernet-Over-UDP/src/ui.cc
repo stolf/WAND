@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.25 2003/01/19 03:05:34 jimmyish Exp $
+ * $Id: ui.cc,v 1.26 2003/01/19 03:07:57 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -29,6 +29,7 @@
 static void m_add(int fd,char **argv,int argc)
 {
 	sockaddr_in addr;
+	addr.sin_family = AF_INET;
 	
 	if (argc<2) {
 		ui_send(fd,"-ERR Not enough parameters\r\n");
