@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.h,v 1.9 2003/01/19 03:05:24 jimmyish Exp $
+ * $Id: list.h,v 1.10 2003/07/21 06:35:17 jspooner Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -9,6 +9,9 @@
 #include <utility> /* pair<,> */
 #include <list> /* list<> */
 #include <string.h>
+#ifndef LINUX
+#include <sys/types.h>
+#endif LINUX
 #include <sys/socket.h> /* sockaddr_in */
 #include <netinet/in.h> /*sockaddr_in */
 #include <ctype.h> /* hack hack */

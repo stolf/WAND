@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.53 2003/02/13 12:12:44 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.54 2003/07/21 06:35:17 jspooner Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -205,7 +205,11 @@ int main(int argc,char **argv)
 	}
 	/* Check that ifname is set */
 	if (ifname == NULL) {
+#ifdef LINUX
 		ifname = strdup("wan0");
+#else
+		ifname = strdup("tap0");
+#endif
 	}
 	/* Check that a control file has been specified */
 	if (ctrlfile == NULL) {

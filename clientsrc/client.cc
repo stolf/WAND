@@ -1,11 +1,11 @@
 /* Wand Project - client
- * $Id: client.cc,v 1.10 2002/11/30 10:25:38 mattgbrown Exp $
+ * $Id: client.cc,v 1.11 2003/07/21 06:35:17 jspooner Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
 
-#include <sys/socket.h>
 #include <sys/types.h> /* for select */
+#include <sys/socket.h>
 #include <sys/time.h> /* for select */
 #include <sys/un.h>
 #include <stdio.h>
