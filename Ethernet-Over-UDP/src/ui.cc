@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: ui.cc,v 1.12 2002/07/07 04:22:23 jimmyish Exp $
+ * $Id: ui.cc,v 1.13 2002/07/07 04:24:25 jimmyish Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -166,6 +166,8 @@ static void ui_callback(int fd)
 	if (fd2>=0){
 		addRead(fd2,ui_process_callback);
 		logger(MOD_IPC, 15, "UI accept succeeded\n");
+
+	}
 }
 
 int ui_setup(char *s="/var/run/Etud.ctrl")
