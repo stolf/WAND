@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.26 2002/11/30 04:04:49 cuchulain Exp $
+ * $Id: Etud.cc,v 1.27 2002/11/30 04:18:13 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -130,5 +130,6 @@ int main(int argc,char **argv)
             unlink(pidfile);
       	}
       	// shutdown the interface
+	logger(MOD_INIT, 1, "Attempting to shutdown interface\n");
 	shutdown_interface();
 }
