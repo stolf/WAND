@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.h,v 1.5 2001/08/12 10:38:14 gsharp Exp $
+ * $Id: list.h,v 1.6 2001/08/14 06:27:46 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -54,8 +54,6 @@ class ether_t {
 		bool operator <(const ether_t &b) const {
 			for (int i=0;i<6;i++)
 				if (address[i]<b.address[i])
-					return true;
-				else if (address[i]<b.address[i])
 					return true;
 			return false;
 		};

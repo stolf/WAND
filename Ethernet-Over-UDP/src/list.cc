@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.4 2001/08/12 06:00:27 gsharp Exp $
+ * $Id: list.cc,v 1.5 2001/08/14 06:27:46 gsharp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -27,6 +27,7 @@ bool rem_ip(ether_t ether)
 {
 	if (online.find(ether)==online.end())
 		return false;
+	online.erase(ether);
 	return true;
 }
 
