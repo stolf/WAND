@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.29 2002/11/30 04:46:11 cuchulain Exp $
+ * $Id: Etud.cc,v 1.30 2002/11/30 05:09:39 cuchulain Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -131,7 +131,7 @@ int main(int argc,char **argv)
             unlink(pidfile);
       	}
       	// shutdown the interface
-	syslog(LOG_DAEMON,"Attempting to shutdown interfacce\n");
-	logger(MOD_INIT, 8, "Attempting to shutdown interface\n");
+	//syslog(LOG_DAEMON,"Attempting to shutdown interfacce\n");
+	//logger(MOD_INIT, 8, "Attempting to shutdown interface\n");
 	shutdown_interface();
 }
