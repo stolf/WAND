@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.34 2002/11/30 07:54:06 mattgbrown Exp $
+ * $Id: Etud.cc,v 1.35 2002/11/30 08:11:22 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -46,6 +46,7 @@ int main(int argc,char **argv)
 	char *module=NULL;
 	char *conffile=NULL;
 	char *pidfile="Etud";
+	char *cmacaddr=NULL;
 	
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
@@ -71,14 +72,14 @@ int main(int argc,char **argv)
 				ifname = strdup(optarg);
 				break;
 			case 'm':
-				macaddr = strdup(optarg);
+				cmacaddr = strdup(optarg);
 				break;
 			case 'p':
 				pidfile = strdup(optarg);
 				break;
 		}
 	}
-	
+
 	if (conffile != NULL) {
 	  	logger(MOD_INIT, 15, "Parsing config file specified on command line\n");
 	  	if (parse_config(main_config,conffile)) {
@@ -93,6 +94,14 @@ int main(int argc,char **argv)
 	  	}
 	}
 
+	if (cmacaddr != NULL)
+		macaddr = strdup(cmacaddr);
+		
+	if (macaddr == NULL) {
+		logger(MOD_INIT, 1, "No MAC Address specified!\n");
+		return 1;
+	}
+	
 	logger(MOD_INIT, 15, "Parsed config, about to load driver\n");
 	if (!load_module(module)) {
 		logger(MOD_INIT, 1, "Aborting...\n");
