@@ -1,7 +1,7 @@
 /* 
  *  WANd Project - Ethernet Over UDP
  * 
- *  $Id: tuntap.c,v 1.5 2002/11/30 03:11:16 mattgbrown Exp $
+ *  $Id: tuntap.c,v 1.6 2002/11/30 04:52:51 cuchulain Exp $
  *
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
@@ -115,12 +115,13 @@ static int tuntap_down(void)
         if (fd > 0)
                 close(fd);
 
-        return 0;
+	// return the old fd, so we can close properly
+        return fd;
 }
 
 static struct interface_t tuntap = {
         "tuntap",
-        "$Id: tuntap.c,v 1.5 2002/11/30 03:11:16 mattgbrown Exp $",
+        "$Id: tuntap.c,v 1.6 2002/11/30 04:52:51 cuchulain Exp $",
         tuntap_setup,
         tuntap_down, 
         tuntap_read, 
