@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: daemons.c,v 1.7 2002/11/30 03:11:19 mattgbrown Exp $
+ * $Id: daemons.c,v 1.8 2002/11/30 04:03:13 mattgbrown Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -27,9 +27,12 @@ void put_pid( char *fname )
 	char buf[512];
 	int fd;
 
-	if( fname == NULL ) fname = defname;
-
-	snprintf( buf, 512, "/var/run/%s.pid", fname );
+	if( fname == NULL ) {
+		fname = defname;
+		snprintf( buf, 512, "/var/run/%s.pid", fname );
+	} else {
+		snprintf( buf, 512, "%s", fname );
+	}
 	fd=creat(buf,0660);
 	if (fd<0)
 		return;
