@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: mainloop.cc,v 1.25 2003/09/05 01:21:48 cuchulain Exp $
+ * $Id: mainloop.cc,v 1.26 2004/10/23 02:07:35 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -11,6 +11,7 @@
 #include <stdio.h> /* for fprintf and perror */
 #include <map>
 #include <errno.h>
+#include <assert.h>
 #include "debug.h"
 #include "mainloop.h"
 

@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: list.cc,v 1.15 2003/04/09 09:50:37 isomer Exp $
+ * $Id: list.cc,v 1.16 2004/10/23 02:07:35 isomer Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -18,6 +18,7 @@
 #include <list>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <assert.h>
 
 online_t online;
 
