@@ -1,5 +1,5 @@
 /* Wand Project - Ethernet Over UDP
- * $Id: Etud.cc,v 1.46 2002/12/02 02:14:58 gianp Exp $
+ * $Id: Etud.cc,v 1.47 2002/12/02 03:30:01 gianp Exp $
  * Licensed under the GPL, see file COPYING in the top level for more
  * details.
  */
@@ -33,7 +33,6 @@ char *ifname=NULL;
 
 int load_module(char *filename)
 {
-	printf("I got here\n");
 	if(!dlopen(filename,RTLD_NOW)) {
 		logger(MOD_INIT, 1, "Error loading module '%s': %s\n",
 				filename , dlerror());
