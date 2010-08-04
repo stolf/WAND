@@ -45,7 +45,7 @@ void age_bridge( int signo )
 		  endpoint_table.erase(del2);
 		  del2 = endpoint_table.end();
 	  }
-	  if (it2->second.tv_sec < tp.tv_sec){
+	  if (it2->second.tv_sec != 0 && it2->second.tv_sec < tp.tv_sec){
 		  logger(MOD_CONTROLER, 5, "Expire endpoint (%s:%d)\n", inet_ntoa(it2->first.sin_addr), ntohs(it2->first.sin_port));
 		  del2 = it2;
 	  }
