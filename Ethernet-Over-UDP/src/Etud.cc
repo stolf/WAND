@@ -34,9 +34,10 @@ extern int default_log_level;
 char *macaddr=NULL;
 char *ifname=NULL;
 int mtu=1280;
-int do_controler = 0;
-int do_forward_unknown = 0;
-int do_relay_broadcast = 0;
+int dynamic_mac = 1;
+int dynamic_endpoint = 0;
+int forward_unknown = 0;
+int relay_broadcast = 0;
 int controler_mac_age = 300;
 int controler_endpoint_age = 900;
 
@@ -58,8 +59,10 @@ void usage(const char *prog) {
 	
 	printf("%s:	[-d module]	- Transport driver to use\n"
 "	[-a]		- Set mac age time in seconds\n"
+"	[-n]		- No dynamic mac learning\n"
 "	[-D]		- Don't daemonise\n"
-"	[-e]		- Set endpoint age time in seconds\n"
+"	[-e]		- Do dynamic endpoint learning\n"
+"	[-E]		- Set endpoint age time in seconds\n"
 "	[-f configfile]	- Read config from this file\n"
 "	[-F]		- Forward (broadcast) unknown mac addresses\n"
 "	[-h]		- This help\n"
@@ -70,7 +73,6 @@ void usage(const char *prog) {
 "  	[-M mtu] - MTU for the created interface\n"
 "	[-p pidfile]	- File to store pid in\n"
 "	[-r]		- Relay broadcast if tunnel controler\n"
-"	[-t]		- Act as tunnel controler\n"
 "\n"
 "Options on command line override those in the config file.\n", 
 	basename(progname));
@@ -95,9 +97,10 @@ int main(int argc,char **argv)
 	char *cctrlfile=NULL;
 	char *cifname=NULL;
 	int cdo_daemonise=1;
-	int cdo_controler=0;
-	int cdo_forward_unknown=0;
-	int cdo_relay_broadcast=0;
+	int cdynamic_mac=1;
+	int cdynamic_endpoint=0;
+	int cforward_unknown=0;
+	int crelay_broadcast=0;
 	int ccontroler_mac_age = -1;
 	int ccontroler_endpoint_age = -1;
 	int cudpport=-1;
@@ -108,9 +111,10 @@ int main(int argc,char **argv)
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
 		{ "daemonise", TYPE_BOOL|TYPE_NULL, &do_daemonise },
-		{ "tunnel_controler", TYPE_BOOL|TYPE_NULL, &do_controler },
-		{ "relay_broadcast", TYPE_BOOL|TYPE_NULL, &do_relay_broadcast },
-		{ "forward_unknown", TYPE_BOOL|TYPE_NULL, &do_forward_unknown },
+		{ "dynamic_mac", TYPE_BOOL|TYPE_NULL, &dynamic_mac },
+		{ "dynamic_endpoint", TYPE_BOOL|TYPE_NULL, &dynamic_endpoint },
+		{ "relay_broadcast", TYPE_BOOL|TYPE_NULL, &relay_broadcast },
+		{ "forward_unknown", TYPE_BOOL|TYPE_NULL, &forward_unknown },
 		{ "mac_age", TYPE_INT|TYPE_NULL, &controler_mac_age },
 		{ "endpoint_age", TYPE_INT|TYPE_NULL, &controler_endpoint_age },
 		{ "macaddr", TYPE_STR|TYPE_NULL, &macaddr },
@@ -132,7 +136,7 @@ int main(int argc,char **argv)
 
 	// Parse command line arguments
 	char ch;
-	while((ch = getopt(argc, argv, "a:c:d:e:Df:trFhi:l:L:m:M:p:")) != -1){
+	while((ch = getopt(argc, argv, "a:c:d:eE:Df:rFhi:l:L:m:M:p:")) != -1){
 		switch(ch){	
 			case 'a':
 				ccontroler_mac_age = atoi(optarg);
@@ -146,17 +150,20 @@ int main(int argc,char **argv)
 			case 'D':
 				cdo_daemonise=0;
 				break;
-			case 'e':
+			case 'E':
 				ccontroler_endpoint_age = atoi(optarg);
 				break;
 			case 'F':
-				cdo_forward_unknown=1;
+				cforward_unknown=1;
 				break;
-			case 't':
-				cdo_controler=1;
+			case 'n':
+				cdynamic_mac=0;
+				break;
+			case 'e':
+				cdynamic_endpoint=1;
 				break;
 			case 'r':
-				cdo_relay_broadcast=1;
+				crelay_broadcast=1;
 				break;
 			case 'f':
 				conffile = strdup(optarg);
@@ -225,12 +232,14 @@ int main(int argc,char **argv)
 		pidfile = strdup(cpidfile);
 	if (cdo_daemonise == 0)
 		do_daemonise = 0;
-	if (cdo_forward_unknown == 1)
-		do_forward_unknown = 1;
-	if (cdo_relay_broadcast == 1)
-		do_relay_broadcast = 1;
-	if (cdo_controler == 1)
-		do_controler = 1;
+	if (cforward_unknown == 1)
+		forward_unknown = 1;
+	if (crelay_broadcast == 1)
+		relay_broadcast = 1;
+	if (cdynamic_mac == 0)
+		dynamic_mac = 0;
+	if (cdynamic_endpoint == 1)
+		dynamic_endpoint = 1;
 	if (cudpport != -1)
 		udpport = cudpport;
 	if (cmtu != -1)
@@ -254,7 +263,7 @@ int main(int argc,char **argv)
 
 
 	/* Setup the bridge timer if we are a controler */
-	if (do_controler) {
+	if (dynamic_mac) {
 		init_controler();
 	}
 

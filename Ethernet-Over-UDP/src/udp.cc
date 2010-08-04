@@ -39,25 +39,25 @@ static void udp_callback(int fd)
 {
 	static char buffer[BUFFERSIZE];
 	int size;
+	timespec* tp = NULL;
 	sockaddr_in addr;
    	socklen_t addrlen=sizeof(addr);
 
-	if (do_controler){
-		size=recvfrom(udpfd,buffer,BUFFERSIZE, 0, (sockaddr*)&addr, &addrlen);
-		if (size<16)
-			return;
+	size=recvfrom(udpfd,buffer,BUFFERSIZE, 0, (sockaddr*)&addr, &addrlen);
+	if (size<16)
+		return;
+
+	if (dynamic_mac){
 		ether_t s_ether(((ether_header_t *)(buffer))->eth.ether_shost);
-		learn_mac(s_ether, addr);
-		if (do_relay_broadcast){
-			ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);
-			if (d_ether.isBroadcast())
-				udp_broadcast(buffer, size);
-		}
+		learn_mac(s_ether, addr, tp);
 	}
-	else{
-		size=udp_read(udpfd,buffer,BUFFERSIZE);
-		if (size<16)
-			return;
+	if (dynamic_endpoint){
+		learn_endpoint(addr, tp);
+	}
+	if (relay_broadcast){
+		ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);
+		if (d_ether.isBroadcast())
+			udp_broadcast(buffer, size, &addr);
 	}
 	send_interface(buffer,size);
 };

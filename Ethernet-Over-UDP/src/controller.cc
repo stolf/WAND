@@ -4,7 +4,6 @@
 #include <stdio.h> /* for fprintf and perror */
 #include <errno.h>
 #include "debug.h"
-#include <time.h>
 #include "controler.h"
 #include <map>
 #include <netinet/in.h>
@@ -88,24 +87,23 @@ void init_controler() {
 
 
 
-void learn_mac(ether_t mac, sockaddr_in addr){
-  timespec tp;
-  bridge_table_t::iterator it;
-  endpoint_t::iterator it2;
-
-  clock_gettime(CLOCK_MONOTONIC, &tp);
-  tp.tv_sec+=controler_mac_age;
-
-  it = bridge_table.find(mac);
+void learn_mac(ether_t mac, sockaddr_in addr, timespec* tp){
+  bridge_table_t::iterator it = bridge_table.find(mac);
 
   if (it == bridge_table.end()){
 		bridge_entry be;
+		if (tp == NULL){
+			tp = new timespec;
+			clock_gettime(CLOCK_MONOTONIC, tp);
+		}
 		be.addr = addr;
-		be.ts = tp;
+		be.ts.tv_sec = tp->tv_sec + controler_mac_age;
+		be.ts.tv_nsec = tp->tv_nsec;
 		bridge_table[mac] = be;
 	  	logger(MOD_CONTROLER, 6, "Learn mac(%s, %s:%d)\n", mac(), inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
   }else{
-		it->second.ts = tp;
+		it->second.ts.tv_sec = tp->tv_sec;
+		it->second.ts.tv_nsec = tp->tv_nsec;
 
 		// Allow for the MAC to move tunnels
 		if (!(addr == (it->second).addr)){
@@ -114,11 +112,22 @@ void learn_mac(ether_t mac, sockaddr_in addr){
 		}
   }
 
-	it2 = endpoint_table.find(addr);
-	tp.tv_sec += controler_endpoint_age - controler_mac_age;
-	if (it2 == endpoint_table.end()){
+}
+
+void learn_endpoint( sockaddr_in addr, timespec* tp){
+  timespec t;
+  endpoint_t::iterator it = endpoint_table.find(addr);
+
+	if (it == endpoint_table.end()){
+		if (tp == NULL){
+			tp = new timespec;
+			clock_gettime(CLOCK_MONOTONIC, tp);
+		}
 	  	logger(MOD_CONTROLER, 5, "Learn endpoint (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-		endpoint_table[addr] = tp;
+		t = *tp;
+		t.tv_sec += controler_mac_age;
+		endpoint_table[addr] = t;
 	}else
-		it2->second = tp;
+		it->second.tv_sec = tp->tv_sec;
+		it->second.tv_nsec = tp->tv_nsec;
 }

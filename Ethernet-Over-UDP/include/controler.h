@@ -6,15 +6,13 @@
 #include <sys/socket.h>
 #include <map>
 #include <list>
+#include <time.h>
 
 
 
 
-extern int do_controler;
-extern int do_relay_broadcast;
-extern int controler_mac_age;
-extern int controler_endpoint_age;
 
 void init_controler();
-void learn_mac(ether_t mac, sockaddr_in addr);
+void learn_mac(ether_t mac, sockaddr_in addr, timespec* tp);
+void learn_endpoint(sockaddr_in addr, timespec* tp);
 #endif
