@@ -56,10 +56,11 @@ class ether_t {
 			return 0; /* Sucess */
 		}
 		bool operator <(const ether_t &b) const {
-			for (int i=0;i<6;i++)
-				if (address[i]<b.address[i])
-					return true;
-			return false;
+			uint64_t a1 = 0;
+			uint64_t a2 = 0;
+			memcpy(((char *)&a1)+2, address, sizeof(address));
+			memcpy(((char *)&a2)+2, b.address, sizeof(address));
+			return a1<a2;
 		};
 		ether_t operator =(const ether_t &b) {
 			memcpy(address,b.address,sizeof(address));
