@@ -17,19 +17,22 @@
 
 class ether_t {
 	public:
-		unsigned char address[6];
+		uint64_t address;
 
 		ether_t(void) {
-			memset(address,0,sizeof(address));
+			address = 0;
 		}
 		ether_t(unsigned char MAC[6]) {
-			memcpy(address,MAC,sizeof(address));
+			address = 0;
+			memcpy(((char *)&address)+2, MAC, sizeof(address));
 		}
 		/* 0 on sucess; negative on failure */
 		int parse(char *s) {
 			/* FIXME: TODO: Throw ParseError */
 			static char *digits = "0123456789abcdef";
 			char *tmp;
+			unsigned char* addressp = (unsigned char*)&address;
+			address = 0;
 			for (int i=0;i<6;i++) {
 				/* Decode the first hex digit */
 				if (*s == '\0') /* Need a char */
@@ -37,7 +40,7 @@ class ether_t {
 				tmp=strchr(digits,tolower(*s));
 				if (!tmp) /* Not a hex digit */
 					return -1; 
-				address[i]=tmp-digits;
+				addressp[i+2]=tmp-digits;
 			
 				/* Decode the next digit */
 				s++;
@@ -46,7 +49,7 @@ class ether_t {
 				tmp=strchr(digits,tolower(*s));
 				if (!tmp) /* Not a hex digit */
 					return -1; 
-				address[i]=(address[i]<<4)+(tmp-digits);
+				addressp[i+2]=(addressp[i+2]<<4)+(tmp-digits);
 				s++;
 	
 				/* Skip intermediate : or - */
@@ -56,43 +59,29 @@ class ether_t {
 			return 0; /* Sucess */
 		}
 		bool operator <(const ether_t &b) const {
-			uint64_t a1 = 0;
-			uint64_t a2 = 0;
-			memcpy(((char *)&a1)+2, address, sizeof(address));
-			memcpy(((char *)&a2)+2, b.address, sizeof(address));
-			return a1<a2;
+			return address<b.address;
 		};
 		ether_t operator =(const ether_t &b) {
-			memcpy(address,b.address,sizeof(address));
+			address = b.address;
 			return *this;
 		};
 
 		bool operator ==(const ether_t &b ) const {
-		  for (int i=0;i<6;i++)
-		    if (address[i]!=b.address[i])
-		      return false;
-		  return true;
-		  
+		    return address==b.address;
 		};
 
-		bool operator <=(const ether_t &b ) const {
-		  for (int i=0;i<6;i++)
-		    if (address[i]>b.address[i])
-		      return false;
-		  return true;
-		  
-		};
-		
 		char *operator()() const {
+			unsigned char* addressp = (unsigned char*)&address;
 			static char buf[18];
 			sprintf(buf,"%02x:%02x:%02x:%02x:%02x:%02x",
-				address[0],address[1],address[2],
-				address[3],address[4],address[5]);
+				addressp[2],addressp[3],addressp[4],
+				addressp[5],addressp[6],addressp[7]);
 			return buf;
 		};
 		
 		bool isBroadcast() const {
-			return ((address[0]&0x01) != 0);
+			unsigned char* addressp = (unsigned char*)&address;
+			return ((addressp[2]&0x01) != 0);
 		}
 };
 

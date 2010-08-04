@@ -121,7 +121,7 @@ int init_interface(void)
 	ether.parse(macaddr);
 #ifdef LINUX
 	ifr.ifr_hwaddr.sa_family = ARPHRD_ETHER;
-	memcpy(&ifr.ifr_hwaddr.sa_data, ether.address, sizeof(ether.address));
+	memcpy(&ifr.ifr_hwaddr.sa_data, &ether.address, sizeof(ether.address));
 	if(ioctl(skfd, SIOCSIFHWADDR, &ifr) < 0) {
 		logger(MOD_IF, 1, "Socket Set MAC Address failed - %m\n");
 		return -1;
