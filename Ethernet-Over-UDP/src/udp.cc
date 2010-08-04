@@ -18,6 +18,7 @@
 #include "driver.h"
 #include "mainloop.h"
 #include "udp.h"
+#include "etud.h"
 #include "debug.h"
 
 struct ether_header_t {
