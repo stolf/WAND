@@ -73,6 +73,14 @@ class ether_t {
 		  return true;
 		  
 		};
+
+		bool operator <=(const ether_t &b ) const {
+		  for (int i=0;i<6;i++)
+		    if (address[i]>b.address[i])
+		      return false;
+		  return true;
+		  
+		};
 		
 		char *operator()() const {
 			static char buf[18];

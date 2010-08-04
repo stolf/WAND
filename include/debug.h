@@ -73,6 +73,7 @@ void logger(int module, int level, const char *format, ...);
 #define MOD_NETWORK 5	/* Anything related to the networking code */
 #define MOD_IF 6	/* Anything related to the interfaces code */
 #define MOD_LIST 7	/* All the stuff to do with etud's list code */
+#define MOD_CONTROLER 8	/* All the stuff to do with etud acting as a controler */
 
 #ifdef __cplusplus
 }

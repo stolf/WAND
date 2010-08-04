@@ -10,4 +10,5 @@
 extern char *macaddr;
 extern char *ifname;
 extern int mtu;
+extern int do_forward_unknown;
 #endif

@@ -27,9 +27,11 @@ void usage( char *pname )
 "	-v	Query for the version of Etud\n"
 "	-R	Be RUDE - for testing ONLY\n"
 "	-c	Conversation mode, enter Queries interactively<tm>\n"
+"	-e	Query for the dynamicly endpoints from tunnel conrtoler\n"
 "	-l	Query for a list of MAC addresses and IP addresses\n"
 "	-m  Query for the MAC address of the Etud interface\n"
 "	-p  Query for the port of the Etud daemon\n"
+"	-t	Query for the dynamicly learned macs from tunnel conrtoler\n"
 "	-a	Query to add the given MAC address and IP address\n"
 "		Mutually exclusive with -d\n"
 "	-d	Query to delete the given MAC address\n"
@@ -43,7 +45,7 @@ void usage( char *pname )
 
 
 #define BUFSIZE 512
-int send_request( char *one, char *two, char *three )
+int send_request( char *one, char *two, char *three, char* four = NULL )
 {
   char buffer[BUFSIZE+1];
   struct sockaddr_un sockname;
@@ -65,8 +67,8 @@ int send_request( char *one, char *two, char *three )
     return -1;
   }
   
-  snprintf( buffer, BUFSIZE, "%s %s %s\n\r", one, (two)?two:"",
-	    (three)?three:"" );
+  snprintf( buffer, BUFSIZE, "%s %s %s %s\n\r", one, (two)?two:"",
+	    (three)?three:"", (four)?four:"" );
   if( write(fd,buffer,strlen(buffer)) != (signed)strlen(buffer) )
     return 2;
   
@@ -109,6 +111,8 @@ int main( int argc, char *argv[] )
 	{"version",0,0,'v'},
 	{"Rude",0,0,'R'},
 	{"list",0,0,'l'},
+	{"dynamic-macs",0,0,'D'},
+	{"endpoints",0,0,'e'},
 	{"converse",0,0,'c'},
 	{"add",0,0,'a'},
 	{"delete",0,0,'d'},
@@ -117,7 +121,7 @@ int main( int argc, char *argv[] )
 
 	while( 1 ) {
 	  //	  printf( "\n!!! argv=\"%p\" \n", argv );
-		o = getopt_long( argc, argv, "hvRlmpcad", long_options, NULL );
+		o = getopt_long( argc, argv, "hvRlDempcad", long_options, NULL );
 		if( o == -1 )
 			break;
 		switch( o ) {
@@ -135,6 +139,14 @@ int main( int argc, char *argv[] )
 		case 'l':
 			any_arg++;
 			send_request( "LIST", NULL, NULL );
+			break;
+		case 'D':
+			any_arg++;
+			send_request( "TLIST", NULL, NULL );
+			break;
+		case 'e':
+			any_arg++;
+			send_request( "ELIST", NULL, NULL );
 			break;
 		case 'c':
 			any_arg++;
@@ -190,10 +202,10 @@ int main( int argc, char *argv[] )
 
 	if( any_add > 0 || any_del > 0 ) { /* add or delete */
 		if( (any_del>0 && argc - optind == 1 ) ||
-		    (any_add>0 && argc - optind == 2 ) ) {
+		    (any_add>0 && argc - optind == 3 ) ) {
 			if( any_add > 0 )
 				send_request( "ADD", argv[optind], 
-					     argv[optind+1] );
+					     argv[optind+1], argv[optind+2] );
 			else
 				send_request( "DEL", argv[optind], NULL );
 		} else {

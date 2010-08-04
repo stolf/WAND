@@ -6,11 +6,11 @@ DRIVERS=drivers/ethertap.so
 
 ifeq ($(OS),Linux)
 DRIVERS+=drivers/tuntap.so
-LIBS=-ldl -lconfig -lfl
-CFLAGS+=-DLINUX
+LIBS=-ldl -lconfig -lfl -lrt
+CFLAGS+=-DLINUX -fno-stack-protector
 CXXFLAGS+=-DLINUX
 else
-LIBS=-lconfig -lfl
+LIBS=-lconfig -lfl -lrt
 CFLAGS+=-DFREEBSD
 CXXFLAGS+=-DFREEBSD
 endif
@@ -18,7 +18,7 @@ endif
 all: Etud $(DRIVERS) test
 
 Etud: src/Etud.o src/interfaces.o src/list.o src/udp.o src/ui.o \
-	src/mainloop.o ../lib/daemons.o ../lib/debug.o
+	src/mainloop.o src/controller.o ../lib/daemons.o ../lib/debug.o
 	$(CXX) $(LDFLAGS) -rdynamic $^ $(LIBS) -o Etud
 
 test: src/list-test

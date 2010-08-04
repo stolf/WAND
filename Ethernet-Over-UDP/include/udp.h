@@ -12,5 +12,7 @@ extern int udpport;
 
 int udp_start();
 int udp_read(int fd,char *buffer,int buffer_size);
+void udp_sendto(sockaddr_in addr,char *buffer,int size);
+void udp_broadcast(char *buffer,int buffer_size);
 
 #endif

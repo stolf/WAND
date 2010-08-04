@@ -4,6 +4,7 @@
  * details.
  */
 
+#include "controler.h"
 #include "driver.h"
 #include "list.h"
 #include "udp.h"
@@ -47,9 +48,18 @@ extern "C" {
 
 const int BUFFERSIZE = 65536;
 
-static void udp_sendto(sockaddr_in addr,char *buffer,int size)
+void udp_sendto(sockaddr_in addr,char *buffer,int size)
 {
 	sendto(udpfd,buffer,size,0,(const struct sockaddr *)&addr,sizeof(addr));
+}
+
+void udp_broadcast(char* buffer, int size)
+{
+	logger(MOD_IF,15,"Broadcasting\n");
+	for (online_t::const_iterator i=online.begin();
+		 i!=online.end();
+		 i++) 
+		udp_sendto(i->second,buffer,size);
 }
 
 static void do_read(int fd)
@@ -62,14 +72,18 @@ static void do_read(int fd)
 	};
 	ether_t ether(((ether_header_t *)(buffer))->eth.ether_dhost);
 	if (ether.isBroadcast()) {
-		logger(MOD_IF,15,"Broadcasting %s\n",ether());
-		for (online_t::const_iterator i=online.begin();
-		     i!=online.end();
-		     i++) 
-			udp_sendto(i->second,buffer,size);
+		if (do_controler)
+			controler_broadcast(buffer,size);
+		else
+			udp_broadcast(buffer, size);
 	}
 	else {
-		sockaddr_in *addr = find_ip(ether);
+		sockaddr_in *addr;
+		if (do_controler){
+			addr = controler_find_ip(ether);
+		}else{
+			addr = find_ip(ether);
+		}
 		if (addr) {
 			logger(MOD_IF,15,"Sending %s to %i\n",ether(),
 					addr->sin_addr);
@@ -77,6 +91,8 @@ static void do_read(int fd)
 		}
 		else {
 			logger(MOD_IF,10,"No match for %s\n",ether());
+			if (do_forward_unknown)
+				udp_broadcast(buffer, size);
 		};
 	};
 }

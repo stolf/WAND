@@ -15,9 +15,11 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 
 
 #include "list.h"
+#include "controler.h"
 #include "ui.h"
 #include "udp.h"
 #include "driver.h"
@@ -132,6 +134,67 @@ static void m_list(int fd,char **argv,int argc)
 	return;
 }
 
+/* TLIST */
+static void c_list(int fd,char **argv,int argc)
+{
+	char tbuff[80];
+	timespec tp;
+	clock_gettime(CLOCK_MONOTONIC, &tp);
+
+	ui_send(fd,"+TLIST ethernet\tip\tport\tremain\r\n");
+	
+	logger(MOD_IPC, 15, "About to perform tlist\n");
+	for (bridge_table_t::const_iterator i=bridge_table.begin();
+	     i!=bridge_table.end();
+	     i++) 
+	{
+		logger(MOD_IPC, 15, "+TLIST %s\t%s\t%d\t%d\r\n",
+			i->first(),
+			inet_ntoa(i->second.addr.sin_addr), 
+			ntohs(i->second.addr.sin_port),
+			i->second.ts.tv_sec - tp.tv_sec);
+
+		sprintf(tbuff,"+TLIST %s\t%s\t%d\t%d\r\n",
+			i->first(),
+			inet_ntoa(i->second.addr.sin_addr), 
+			ntohs(i->second.addr.sin_port),
+			i->second.ts.tv_sec - tp.tv_sec);
+		ui_send(fd,tbuff);
+	}
+	logger(MOD_IPC, 15, "Finished tlist\n");
+	ui_send(fd,"-OK\r\n");
+	return;
+}
+/* ELIST */
+static void e_list(int fd,char **argv,int argc)
+{
+	char tbuff[80];
+	timespec tp;
+	clock_gettime(CLOCK_MONOTONIC, &tp);
+
+	ui_send(fd,"+ELIST ip\tport\tremain\r\n");
+	
+	logger(MOD_IPC, 15, "About to perform Elist\n");
+	for (endpoint_t::const_iterator i=endpoint_table.begin();
+	     i!=endpoint_table.end();
+	     i++) 
+	{
+		logger(MOD_IPC, 15, "+ELIST %s\t%d\t%d\r\n",
+			inet_ntoa(i->first.sin_addr), 
+			ntohs(i->first.sin_port),
+			i->second.tv_sec - tp.tv_sec);
+
+		sprintf(tbuff,"+ELIST %s\t%d\t%d\r\n",
+			inet_ntoa(i->first.sin_addr), 
+			ntohs(i->first.sin_port),
+			i->second.tv_sec - tp.tv_sec);
+		ui_send(fd,tbuff);
+	}
+	logger(MOD_IPC, 15, "Finished elist\n");
+	ui_send(fd,"-OK\r\n");
+	return;
+}
+
 static void m_version(int fd,char **argv,int argc)
 {
 	ui_send(fd,"-ERR Not Supported\r\n");
@@ -149,6 +212,8 @@ static struct functable_entry_t functable[] = {
 	{ "GETMAC", m_getmac },
 	{ "GETPORT", m_getport },
 	{ "LIST", m_list },
+	{ "TLIST", c_list },
+	{ "ELIST", e_list },
 	{ "VERSION", m_version },
 	{ NULL, NULL }
 };

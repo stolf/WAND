@@ -15,9 +15,11 @@
 #include <getopt.h> /* for parsing command line options */
 #include <syslog.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <libgen.h> /* for basename */
 
 
+#include "controler.h"
 #include "list.h"
 #include "driver.h"
 #include "udp.h"
@@ -32,6 +34,11 @@ extern int default_log_level;
 char *macaddr=NULL;
 char *ifname=NULL;
 int mtu=1280;
+int do_controler = 0;
+int do_forward_unknown = 0;
+int do_relay_broadcast = 0;
+int controler_mac_age = 300;
+int controler_endpoint_age = 900;
 
 int load_module(char *filename)
 {
@@ -50,8 +57,11 @@ void usage(const char *prog) {
 	progname=strdup(prog);
 	
 	printf("%s:	[-d module]	- Transport driver to use\n"
+"	[-a]		- Set mac age time in seconds\n"
 "	[-D]		- Don't daemonise\n"
+"	[-e]		- Set endpoint age time in seconds\n"
 "	[-f configfile]	- Read config from this file\n"
+"	[-F]		- Forward (broadcast) unknown mac addresses\n"
 "	[-h]		- This help\n"
 "	[-i ifname]	- Name of the interface to create \n"
 "	[-l port]	- Communicate on the specified port\n"
@@ -59,6 +69,8 @@ void usage(const char *prog) {
 "	[-m macaddr]	- MAC address for the created interface\n"
 "  	[-M mtu] - MTU for the created interface\n"
 "	[-p pidfile]	- File to store pid in\n"
+"	[-r]		- Relay broadcast if tunnel controler\n"
+"	[-t]		- Act as tunnel controler\n"
 "\n"
 "Options on command line override those in the config file.\n", 
 	basename(progname));
@@ -83,6 +95,11 @@ int main(int argc,char **argv)
 	char *cctrlfile=NULL;
 	char *cifname=NULL;
 	int cdo_daemonise=1;
+	int cdo_controler=0;
+	int cdo_forward_unknown=0;
+	int cdo_relay_broadcast=0;
+	int ccontroler_mac_age = -1;
+	int ccontroler_endpoint_age = -1;
 	int cudpport=-1;
   	int cmtu=-1;
 	int clevel=-1;
@@ -91,6 +108,11 @@ int main(int argc,char **argv)
 	config_t main_config[] = {
 		{ "module", TYPE_STR|TYPE_NOTNULL, &module },
 		{ "daemonise", TYPE_BOOL|TYPE_NULL, &do_daemonise },
+		{ "tunnel_controler", TYPE_BOOL|TYPE_NULL, &do_controler },
+		{ "relay_broadcast", TYPE_BOOL|TYPE_NULL, &do_relay_broadcast },
+		{ "forward_unknown", TYPE_BOOL|TYPE_NULL, &do_forward_unknown },
+		{ "mac_age", TYPE_INT|TYPE_NULL, &controler_mac_age },
+		{ "endpoint_age", TYPE_INT|TYPE_NULL, &controler_endpoint_age },
 		{ "macaddr", TYPE_STR|TYPE_NULL, &macaddr },
 		{ "ifname", TYPE_STR|TYPE_NULL, &ifname },
 		{ "pidfile", TYPE_STR|TYPE_NULL, &pidfile },
@@ -104,13 +126,17 @@ int main(int argc,char **argv)
 		{ "debug_MOD_IPC", TYPE_INT|TYPE_NULL, &modtolevel[MOD_IPC]},
 		{ "debug_MOD_LIST", TYPE_INT|TYPE_NULL, &modtolevel[MOD_LIST]},
 		{ "debug_MOD_NETWORK", TYPE_INT|TYPE_NULL, &modtolevel[MOD_NETWORK]},
+		{ "debug_MOD_CONTROLER", TYPE_INT|TYPE_NULL, &modtolevel[MOD_CONTROLER]},
 		{ NULL, 0, NULL }
 	};
 
 	// Parse command line arguments
 	char ch;
-	while((ch = getopt(argc, argv, "c:d:Df:hi:l:L:m:M:p:")) != -1){
+	while((ch = getopt(argc, argv, "a:c:d:e:Df:trFhi:l:L:m:M:p:")) != -1){
 		switch(ch){	
+			case 'a':
+				ccontroler_mac_age = atoi(optarg);
+				break;
 			case 'c':
 				cctrlfile = strdup(optarg);
 				break;
@@ -119,6 +145,18 @@ int main(int argc,char **argv)
 				break;
 			case 'D':
 				cdo_daemonise=0;
+				break;
+			case 'e':
+				ccontroler_endpoint_age = atoi(optarg);
+				break;
+			case 'F':
+				cdo_forward_unknown=1;
+				break;
+			case 't':
+				cdo_controler=1;
+				break;
+			case 'r':
+				cdo_relay_broadcast=1;
 				break;
 			case 'f':
 				conffile = strdup(optarg);
@@ -187,10 +225,20 @@ int main(int argc,char **argv)
 		pidfile = strdup(cpidfile);
 	if (cdo_daemonise == 0)
 		do_daemonise = 0;
+	if (cdo_forward_unknown == 1)
+		do_forward_unknown = 1;
+	if (cdo_relay_broadcast == 1)
+		do_relay_broadcast = 1;
+	if (cdo_controler == 1)
+		do_controler = 1;
 	if (cudpport != -1)
 		udpport = cudpport;
 	if (cmtu != -1)
 		mtu = cmtu;
+	if (ccontroler_mac_age != -1)
+		controler_mac_age = ccontroler_mac_age;
+	if (ccontroler_endpoint_age != -1)
+		controler_endpoint_age = ccontroler_endpoint_age;
 	if (cctrlfile != NULL) 
 		ctrlfile = strdup(cctrlfile);
 	if (cifname != NULL)
@@ -203,6 +251,14 @@ int main(int argc,char **argv)
 		logger(MOD_INIT, 1, "No MAC Address specified!\n");
 		return 1;
 	}
+
+
+	/* Setup the bridge timer if we are a controler */
+	if (do_controler) {
+		init_controler();
+	}
+
+
 	/* Check that ifname is set */
 	if (ifname == NULL) {
 #ifdef LINUX

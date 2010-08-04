@@ -12,11 +12,18 @@
 #include <unistd.h> /* for read() */
 #include <errno.h>
 #include <string.h>
+#include <net/ethernet.h>
 
+#include "controler.h"
 #include "driver.h"
 #include "mainloop.h"
 #include "udp.h"
 #include "debug.h"
+
+struct ether_header_t {
+	unsigned short int fcs;
+        struct ether_header eth;
+};
 
 int udpfd;
 int udpport = 22222;
@@ -32,9 +39,26 @@ static void udp_callback(int fd)
 {
 	static char buffer[BUFFERSIZE];
 	int size;
-	size=udp_read(udpfd,buffer,BUFFERSIZE);
-	if (size<16)
-		return;
+	sockaddr_in addr;
+   	socklen_t addrlen=sizeof(addr);
+
+	if (do_controler){
+		size=recvfrom(udpfd,buffer,BUFFERSIZE, 0, (sockaddr*)&addr, &addrlen);
+		if (size<16)
+			return;
+		ether_t s_ether(((ether_header_t *)(buffer))->eth.ether_shost);
+		learn_mac(s_ether, addr);
+		if (do_relay_broadcast){
+			ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);
+			if (d_ether.isBroadcast())
+				udp_broadcast(buffer, size);
+		}
+	}
+	else{
+		size=udp_read(udpfd,buffer,BUFFERSIZE);
+		if (size<16)
+			return;
+	}
 	send_interface(buffer,size);
 };
 

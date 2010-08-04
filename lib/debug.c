@@ -26,7 +26,7 @@ static int loglookup[]={LOG_ALERT, LOG_ALERT, LOG_CRIT, LOG_ERR, LOG_WARNING,
  * default_debug_level.
  */
 
-int modtolevel[]= {-1, -1, -1, -1, -1, -1, -1, -1};
+int modtolevel[]= {-1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 /* Make the default log level 7, all non debug info. */
 int default_log_level = 7;
@@ -47,7 +47,7 @@ void logger(int module, int level, const char *format, ...)
 	
 	assert(default_log_level <= 15 && default_log_level >= 0);
 	assert(level <= 15 && level >= 0);
-	assert(module <= 7 && module >= 0);
+	assert(module <= 8 && module >= 0);
 	assert(daemonised == 0 || daemonised == 1);
 	assert(modtolevel[module] <= 15 && modtolevel[module] >= -1);
 	

@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/time.h> /* for timeval, select timeouts */
 #include <unistd.h>
+#include <string.h>
 #include <signal.h> /* for sigaction (call and struct) */
 #include <stdio.h> /* for fprintf and perror */
 #include <map>
@@ -99,7 +100,7 @@ void wait_for_event(fd_set &rfd)
 	do {
 		rfd2 = rfd;
 		ret=select(highestfd+2, &rfd2, NULL, NULL, NULL);
-		if (ret<0 && !endloop)
+		if (ret<0 && !endloop && errno != EINTR)
 			logger(MOD_IPC, 4, "Select returned an"
 				" error: %s\n", strerror(errno));
 	} while (ret<0 && !endloop);
