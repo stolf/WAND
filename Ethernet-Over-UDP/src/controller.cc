@@ -15,8 +15,6 @@
 
 using namespace std;
 
-bridge_table_t bridge_table;
-endpoint_t endpoint_table;
 
 void age_bridge( int signo ) 
 {
@@ -30,7 +28,7 @@ void age_bridge( int signo )
 		  bridge_table.erase(del);
 		  del = bridge_table.end();
 	  }
-	  if (it->second.ts.tv_sec < tp.tv_sec){
+	  if (it->second.ts.tv_sec != 0 && it->second.ts.tv_sec < tp.tv_sec){
 		  logger(MOD_CONTROLER, 6, "Expire mac(%s, %s:%d)\n", it->first(), inet_ntoa(it->second.addr.sin_addr), ntohs(it->second.addr.sin_port));
 		  del = it;
 	  }
@@ -123,20 +121,4 @@ void learn_mac(ether_t mac, sockaddr_in addr){
 		endpoint_table[addr] = tp;
 	}else
 		it2->second = tp;
-}
-
-sockaddr_in* controler_find_ip(ether_t mac){
-  bridge_table_t::iterator it = bridge_table.find(mac);
-
-  if (it != bridge_table.end())
-	  return &(it->second.addr);
-  else
-	  return NULL;
-}
-void controler_broadcast(char* buffer, int size){
-	logger(MOD_CONTROLER, 8, "Sending controller broadcast\n");
-	for (endpoint_t::const_iterator i=endpoint_table.begin();
-		 i!=endpoint_table.end();
-		 i++) 
-		udp_sendto(i->first,buffer,size);
 }

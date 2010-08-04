@@ -20,7 +20,8 @@
 #include <netinet/in.h>
 #include <assert.h>
 
-online_t online;
+bridge_table_t bridge_table;
+endpoint_t endpoint_table;
 
 bool operator !=(struct sockaddr_in a,struct sockaddr_in b) { return a.sin_port != b.sin_port || a.sin_addr.s_addr != b.sin_addr.s_addr || a.sin_family != b.sin_family; };
 
@@ -36,108 +37,87 @@ bool operator ==(const struct sockaddr_in a, const struct sockaddr_in b)
 	return true;
 }
 
+sockaddr_in* find_ip(ether_t mac){
+  bridge_table_t::iterator it = bridge_table.find(mac);
+
+  if (it != bridge_table.end())
+	  return &(it->second.addr);
+  else
+	  return NULL;
+}
 
 bool add_ip(ether_t ether, struct sockaddr_in addr)
 {
-  if( !online.empty() ) {
-    online_t::iterator i = online.begin();
-    logger(MOD_LIST, 15, "\nadd_ip(%s, %x) Entered\n", ether(), addr.sin_addr);
-    while( i != online.end() ) { /* Not empty, search for given ether */
-      if( ((*i).first) == ether ) { /* match, handle */
-	if(addr == (*i).second) { /* ether and ip both match - no change */
-	  logger(MOD_LIST, 15, "\nadd_ip() Unchanged (will return f)\n");
-	  return false;
-	} else { /* node has changed, update it */
-	  (*i).second = addr;
-	  logger(MOD_LIST, 15, "\nadd_ip() Changed (will return T)\n");
-	  return true;
-	}
-      }
-      ++i;
+
+  int ret = 0;
+  bridge_table_t::iterator it;
+  endpoint_t::iterator it2;
+
+  it = bridge_table.find(ether);
+  it2 = endpoint_table.find(addr);
+  bridge_entry be;
+  be.addr = addr;
+  be.ts.tv_sec=0;
+  be.ts.tv_nsec=0;
+
+  if( it != bridge_table.end()) {
+    if(addr != it->second.addr || it->second.ts.tv_sec != 0) { /* ether and ip both match - no change */
+      it->second.addr = addr;
+      it->second.ts.tv_sec = 0;
+      ret = 1;
     }
-    /* given ether is not in list, add it */
-    logger(MOD_LIST, 15, "\nadd_ip() Was Not In List (will return T)\n");
-    online.push_back( node_t::pair(ether,addr) );
+  }else{
+    bridge_table[ether] = be;
+      ret = 2;
+  }
+
+  if( it2 != endpoint_table.end()) {
+    if(it2->second.tv_sec != 0) {
+      it2->second.tv_sec = 0;
+      ret = std::max(1,ret);
+    }
+  }else{
+    endpoint_table[addr] = be.ts;
+      ret = 2;
+  }
+  
+  if (ret == 0){
+    logger(MOD_LIST, 15, "\nadd_ip() Unchanged (will return f)\n");
+    return false;
+  }else if (ret == 1){
+    logger(MOD_LIST, 15, "\nadd_ip() Changed (will return T)\n");
     return true;
-  } else { /* List was empty, add the node */
-    logger(MOD_LIST, 15, "\nadd_ip(%s, %x) Was Empty (will return T)\n", 
-		    ether(), addr.sin_addr);
-    online.push_back( node_t::pair(ether,addr) );
+  }else if (ret == 2){
+    logger(MOD_LIST, 15, "\nadd_ip() Was Not In List (will return T)\n");
     return true;
   }
-  /* should never get here */
-  assert(0);
 }
 
 bool rem_ip(ether_t ether)
 {
-  if (online.empty() ) {
-    logger(MOD_LIST, 15, "rem_ip() Empty\n");
-    /* No need to dump the table -- it's empty :) */
-    return false;
+  bridge_table_t::iterator it;
+  endpoint_t::iterator it2;
+
+  it = bridge_table.find(ether);
+  if (it != bridge_table.end())
+	  it2 = endpoint_table.find(it->second.addr);
+  else{
+	  logger(MOD_LIST, 15, "rem_ip() = FALSE\n");
+	  return false;
   }
-  logger(MOD_LIST, 15, "\nrem_ip(%s) Entered\n", ether() );
-  online_t::iterator i = online.begin();
-  bool found_and_removed = false;
-  while( i != online.end() ) {
-    if( ((*i).first) == ether ) { /* match, remove */
-      found_and_removed = true;
-      online.remove( *i );
-      break;
-    }
-    ++i;
+
+
+  if( it2 != endpoint_table.end() && it->second.ts.tv_sec == 0 && it2->second.tv_sec == 0) {
+	  logger(MOD_LIST, 15, "rem_ip() = TRUE\n");
+	  bridge_table.erase(it);
+	  endpoint_table.erase(it2);
+	  return true;
+  }else{
+	  logger(MOD_LIST, 15, "rem_ip() = FALSE\n");
+	  return false;
   }
-  logger(MOD_LIST, 15, "rem_ip() = %s\n", (found_and_removed)?"TRUE":"FALSE");
-  return found_and_removed;
+
 }
-
-sockaddr_in *find_ip(ether_t ether)
-{
-  sockaddr_in *found = NULL;
-  
-  if (online.empty() ) {
-    logger(MOD_LIST, 15, "find_ip() Empty\n");
-    /* No need to dump the table -- it's empty :) */
-    return false;
-  }
-  logger(MOD_LIST, 15, "\nfind_ip(%s) Entered\n", ether());
-
-  online_t::iterator i = online.begin();
-  
-  while( i != online.end() ) {
-    if( ((*i).first) == ether ) { /* match, return */
-      found = &(*i).second;
-      break;
-    }
-    ++i;
-  }
-
-  if (found)
-  	logger(MOD_LIST, 15, "find_ip() = %x\n", found->sin_addr);
-  else
-	logger(MOD_LIST, 15, "find_ip() = NULL\n");
-  return found;
-}
-
-int dump_table( FILE *stream )
-{
-  if( online.empty() ) {
-    fprintf( stream, "Table is empty.\n" );
-    return 0;
-  }
-  online_t::iterator i = online.begin();
-  int c = 0;
-  while( i != online.end() ) {
-    fprintf( stream, "%2i: online[\"%s\"] = %x, %d\n", c,
-	     ((*i).first)(), (*i).second.sin_addr.s_addr, 
-	     (*i).second.sin_port );
-    ++i;
-    ++c;
-  }
-  fprintf( stream, "--\n" );
-  return c;
-}
-
 
 #ifdef TEST
 #include <assert.h>

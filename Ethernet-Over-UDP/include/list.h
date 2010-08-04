@@ -6,8 +6,7 @@
 
 #ifndef LIST_H
 #define LIST_H
-#include <utility> /* pair<,> */
-#include <list> /* list<> */
+#include <map> /* map<> */
 #include <string.h>
 #include <sys/types.h> /* for FreeBSD */
 #include <sys/socket.h> /* sockaddr_in */
@@ -85,28 +84,39 @@ class ether_t {
 		}
 };
 
+struct bridge_entry {
+	sockaddr_in addr;
+	timespec ts;
+};
+
+struct ltaddr
+{
+	bool operator()(const sockaddr_in& s1, const sockaddr_in& s2)
+	{
+		if (s1.sin_addr.s_addr == s2.sin_addr.s_addr){
+			return s1.sin_port < s2.sin_port;
+		}else{
+			return s1.sin_addr.s_addr < s2.sin_addr.s_addr;
+		}
+	}
+};
 
 /* Maps an ethernet address to a connection (IP / port)
  * Provides no guarantee any key (ether_t) only has ONE data value (ip_t)
  */
-typedef std::pair<ether_t, struct sockaddr_in > node_t;
-typedef std::list<node_t> online_t;
+typedef std::map<ether_t, struct bridge_entry> bridge_table_t;
+typedef std::map<sockaddr_in, timespec, ltaddr> endpoint_t;
 
 /* Define an operator to allow sockaddr_in == sockaddr_in tests */
 
 bool operator ==(const struct sockaddr_in a, const struct sockaddr_in b);
 
-extern online_t online;
+extern bridge_table_t bridge_table;
+extern endpoint_t endpoint_table;
 
 bool add_ip(ether_t ether, sockaddr_in addr); /* false if already existed */
 bool rem_ip(ether_t ether); /* false if not found */
 sockaddr_in *find_ip(ether_t ether); /* return the addr associated with ether */
-
-/* Outputs the entire table to the given file stream.
- * Returns the number of entries so dumped
- * hack hack
- */
-int dump_table( FILE *stream );
 
 #endif
 

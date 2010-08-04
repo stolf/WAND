@@ -111,57 +111,30 @@ static void m_getport(int fd,char **argv,int argc)
 static void m_list(int fd,char **argv,int argc)
 {
 	char tbuff[80];
-	ui_send(fd,"+LIST ethernet\tip\tport\r\n");
-	
-	logger(MOD_IPC, 15, "About to perform list\n");
-	for (online_t::const_iterator i=online.begin();
-	     i!=online.end();
-	     i++) 
-	{
-		logger(MOD_IPC, 15, "+LIST %s\t%s\t%d\r\n",
-			i->first(),
-			inet_ntoa(i->second.sin_addr), 
-			ntohs(i->second.sin_port));
-
-		sprintf(tbuff,"+LIST %s\t%s\t%d\r\n",
-			i->first(),
-			inet_ntoa(i->second.sin_addr), 
-			ntohs(i->second.sin_port));
-		ui_send(fd,tbuff);
-	}
-	logger(MOD_IPC, 15, "Finished list\n");
-	ui_send(fd,"-OK\r\n");
-	return;
-}
-
-/* TLIST */
-static void c_list(int fd,char **argv,int argc)
-{
-	char tbuff[80];
 	timespec tp;
 	clock_gettime(CLOCK_MONOTONIC, &tp);
 
-	ui_send(fd,"+TLIST ethernet\tip\tport\tremain\r\n");
+	ui_send(fd,"+LIST ethernet\tip\tport\tremain\r\n");
 	
-	logger(MOD_IPC, 15, "About to perform tlist\n");
+	logger(MOD_IPC, 15, "About to perform list\n");
 	for (bridge_table_t::const_iterator i=bridge_table.begin();
 	     i!=bridge_table.end();
 	     i++) 
 	{
-		logger(MOD_IPC, 15, "+TLIST %s\t%s\t%d\t%d\r\n",
+		logger(MOD_IPC, 15, "+LIST %s\t%s\t%d\t%d\r\n",
 			i->first(),
 			inet_ntoa(i->second.addr.sin_addr), 
 			ntohs(i->second.addr.sin_port),
-			i->second.ts.tv_sec - tp.tv_sec);
+			i->second.ts.tv_sec?i->second.ts.tv_sec - tp.tv_sec:0);
 
-		sprintf(tbuff,"+TLIST %s\t%s\t%d\t%d\r\n",
+		sprintf(tbuff,"+LIST %s\t%s\t%d\t%d\r\n",
 			i->first(),
 			inet_ntoa(i->second.addr.sin_addr), 
 			ntohs(i->second.addr.sin_port),
-			i->second.ts.tv_sec - tp.tv_sec);
+			i->second.ts.tv_sec?i->second.ts.tv_sec - tp.tv_sec:0);
 		ui_send(fd,tbuff);
 	}
-	logger(MOD_IPC, 15, "Finished tlist\n");
+	logger(MOD_IPC, 15, "Finished list\n");
 	ui_send(fd,"-OK\r\n");
 	return;
 }
@@ -212,7 +185,6 @@ static struct functable_entry_t functable[] = {
 	{ "GETMAC", m_getmac },
 	{ "GETPORT", m_getport },
 	{ "LIST", m_list },
-	{ "TLIST", c_list },
 	{ "ELIST", e_list },
 	{ "VERSION", m_version },
 	{ NULL, NULL }

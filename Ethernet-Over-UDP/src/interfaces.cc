@@ -56,10 +56,10 @@ void udp_sendto(sockaddr_in addr,char *buffer,int size)
 void udp_broadcast(char* buffer, int size)
 {
 	logger(MOD_IF,15,"Broadcasting\n");
-	for (online_t::const_iterator i=online.begin();
-		 i!=online.end();
+	for (endpoint_t::const_iterator i=endpoint_table.begin();
+		 i!=endpoint_table.end();
 		 i++) 
-		udp_sendto(i->second,buffer,size);
+		udp_sendto(i->first,buffer,size);
 }
 
 static void do_read(int fd)
@@ -72,18 +72,10 @@ static void do_read(int fd)
 	};
 	ether_t ether(((ether_header_t *)(buffer))->eth.ether_dhost);
 	if (ether.isBroadcast()) {
-		if (do_controler)
-			controler_broadcast(buffer,size);
-		else
-			udp_broadcast(buffer, size);
+		udp_broadcast(buffer, size);
 	}
 	else {
-		sockaddr_in *addr;
-		if (do_controler){
-			addr = controler_find_ip(ether);
-		}else{
-			addr = find_ip(ether);
-		}
+		sockaddr_in *addr = find_ip(ether);
 		if (addr) {
 			logger(MOD_IF,15,"Sending %s to %i\n",ether(),
 					addr->sin_addr);
