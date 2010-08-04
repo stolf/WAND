@@ -59,7 +59,7 @@ void udp_broadcast(char* buffer, int size, sockaddr_in* addr)
 	for (endpoint_t::const_iterator i=endpoint_table.begin();
 		 i!=endpoint_table.end();
 		 i++){
-		if (addr != NULL && !(i->first == *addr))
+		if (addr == NULL || !(i->first == *addr))
 			udp_sendto(i->first,buffer,size);
 	}
 }
