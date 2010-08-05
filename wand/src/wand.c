@@ -288,7 +288,7 @@ int main(int argc,char **argv)
 
 	/* The real config options */
 	int do_daemonise=1;
-	char *pidfile = "wand";
+	char *pidfile = strdup("/var/run/wand.pid");
 	char *server = 0;
 	char *proto = 0;
 	int udpport = 44444;

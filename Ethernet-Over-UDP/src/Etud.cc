@@ -89,7 +89,7 @@ int main(int argc,char **argv)
 	int do_daemonise=1;
 	char *module=NULL;
 	char *conffile=NULL;
-	char *pidfile="Etud";
+	char *pidfile = strdup("/var/run/Etud.pid");
 	char *ctrlfile=NULL;
   
 	/* Temporary options read from the command line */
