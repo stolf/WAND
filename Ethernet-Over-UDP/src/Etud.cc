@@ -255,12 +255,6 @@ int main(int argc,char **argv)
 	if (clevel != -1)
 		default_log_level=clevel;
 		
-	/* Check that a MAC address has been specified */
-	if (macaddr == NULL) {
-		logger(MOD_INIT, 1, "No MAC Address specified!\n");
-		return 1;
-	}
-
 
 	/* Setup the bridge timer if we are a controler */
 	if (dynamic_mac) {

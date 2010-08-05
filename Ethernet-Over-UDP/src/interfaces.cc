@@ -13,6 +13,7 @@
 #include <netinet/in.h>
 #include <vector>
 #include <map>
+#include <errno.h>
 #include <sys/socket.h>
 
 #ifdef LINUX
@@ -94,15 +95,19 @@ static void do_read(int fd)
 int init_interface(void)
 {
 
+	char buf[1024];
 	struct ifreq ifr;
-	int skfd;
+	struct ifconf ifc;
+	struct ifreq* ifa;
+	int skfd, iface_count;
 	ether_t ether;
 
 
 	/* Open a socket so we can ioctl() */
-	if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+	//if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+	if ((skfd = socket(PF_PACKET, SOCK_RAW, 0)) < 0) {
 	    logger(MOD_IF, 1, "Socket create failed - %m\n");
-	    return -1;
+	    return 0;
         }			
 
 	int ifd;
@@ -112,21 +117,55 @@ int init_interface(void)
 	
 	/* Configure the MAC Address on the interface */
 	snprintf(ifr.ifr_name, IFNAMSIZ, "%s", ifname);
-	ether.parse(macaddr);
+
+	/* If mac not specified, borrow from the first interface that has an
+	 * IP address and a ethernet address
+	*/
+	if (macaddr == NULL){
+		logger(MOD_IF, 15, "No maccaddr specified, trying to find one\n");
+		ifc.ifc_len = sizeof(buf);
+		ifc.ifc_buf = buf;
+		if (ioctl(skfd, SIOCGIFCONF, &ifc) < 0){
+			logger(MOD_IF, 1, "Get interfaces failed, %s\n", strerror(errno));
+			return 0;
+		}
+		ifa = ifc.ifc_req;
+		iface_count = ifc.ifc_len / sizeof(ifr);
+		for(int i = 0; i < iface_count; i++){
+			ifr.ifr_hwaddr.sa_family = ARPHRD_ETHER;
+			if(ioctl(skfd, SIOCGIFHWADDR, &ifa[i]) < 0) {
+				logger(MOD_IF, 1, "Socket GET MAC Address failed \n");
+				return 0;
+			}
+	        memcpy(((char*)&ether.address)+2, &ifa[i].ifr_addr.sa_data, 6);
+			logger(MOD_IF, 15, "Found IFace %s(%s)\n", ether(), ifa[i].ifr_name);
+			if (ether.address != 0){
+				logger(MOD_IF, 6, "Mac not specified, using %s(%s)\n", ether(), ifa[i].ifr_name);
+				break;
+			}
+		}
+		if (ether.address == 0){
+			logger(MOD_IF, 1, "Mac not specified, and cannot find one to use\n");
+			return 0;
+		}
+	}else{
+		ether.parse(macaddr);
+	}
+
 #ifdef LINUX
 	ifr.ifr_hwaddr.sa_family = ARPHRD_ETHER;
-	memcpy(&ifr.ifr_hwaddr.sa_data, &ether.address, sizeof(ether.address));
+	memcpy(&ifr.ifr_hwaddr.sa_data, ((char*)&ether.address)+2, 6);
 	if(ioctl(skfd, SIOCSIFHWADDR, &ifr) < 0) {
 		logger(MOD_IF, 1, "Socket Set MAC Address failed - %m\n");
-		return -1;
+		return 0;
 	}
 #else
         ifr.ifr_addr.sa_len = ETHER_ADDR_LEN;
         ifr.ifr_addr.sa_family = AF_LINK;
-        memcpy(&ifr.ifr_addr.sa_data, ether.address, sizeof(ether.address));
+        memcpy(&ifr.ifr_addr.sa_data, ((char*)&ether.address)+2, 6);
         if (ioctl(skfd, SIOCSIFLLADDR, (caddr_t)&ifr) < 0) {
                         logger(MOD_IF,1,"ioctl (set lladdr)");
-                        return -1;
+                        return 0;
         }
 #endif
 	
@@ -134,7 +173,7 @@ int init_interface(void)
   /* Read the current flags on the interface */
   if (ioctl(skfd, SIOCGIFFLAGS, &ifr) < 0) {
     logger(MOD_IF, 1, "Get Flags failed on device - %m\n");
-    return -1;
+    return 0;
   }
   /* remove the NOARP, set the MULTICAST flags */
   ifr.ifr_flags &= ~IFF_NOARP;
@@ -143,14 +182,14 @@ int init_interface(void)
   /* commit changes */
   if (ioctl(skfd, SIOCSIFFLAGS, &ifr) < 0) {
     logger(MOD_IF, 1, "Set Flags failed on device - %m\n");
-    return -1;
+    return 0;
   }
   
   /* Set MTU on the interface  */
   ifr.ifr_mtu = mtu; 
   if(ioctl(skfd, SIOCSIFMTU, &ifr) < 0) {
     logger(MOD_IF, 1, "Socket Set MTU failed - %m\n");
-    return -1;
+    return 0;
   }
   
   
