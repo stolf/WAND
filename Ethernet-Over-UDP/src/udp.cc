@@ -40,20 +40,22 @@ static void udp_callback(int fd)
 {
 	static char buffer[BUFFERSIZE];
 	int size;
-	timespec* tp = NULL;
+	timespec tp;
+	clock_gettime(CLOCK_MONOTONIC, &tp);
+
 	sockaddr_in addr;
    	socklen_t addrlen=sizeof(addr);
 
-	size=recvfrom(udpfd,buffer,BUFFERSIZE, 0, (sockaddr*)&addr, &addrlen);
+	size=recvfrom(fd,buffer,BUFFERSIZE, 0, (sockaddr*)&addr, &addrlen);
 	if (size<16)
 		return;
 
 	if (dynamic_mac){
 		ether_t s_ether(((ether_header_t *)(buffer))->eth.ether_shost);
-		learn_mac(s_ether, addr, tp);
+		learn_mac(s_ether, addr, &tp);
 	}
 	if (dynamic_endpoint){
-		learn_endpoint(addr, tp);
+		learn_endpoint(addr, &tp);
 	}
 	if (relay_broadcast){
 		ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);

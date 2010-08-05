@@ -93,10 +93,6 @@ void learn_mac(ether_t mac, sockaddr_in addr, timespec* tp){
 
   if (it == bridge_table.end()){
 		bridge_entry be;
-		if (tp == NULL){
-			tp = new timespec;
-			clock_gettime(CLOCK_MONOTONIC, tp);
-		}
 		be.addr = addr;
 		be.ts.tv_sec = tp->tv_sec + controler_mac_age;
 		be.ts.tv_nsec = tp->tv_nsec;
@@ -120,15 +116,12 @@ void learn_endpoint( sockaddr_in addr, timespec* tp){
   endpoint_t::iterator it = endpoint_table.find(addr);
 
 	if (it == endpoint_table.end()){
-		if (tp == NULL){
-			tp = new timespec;
-			clock_gettime(CLOCK_MONOTONIC, tp);
-		}
 	  	logger(MOD_CONTROLER, 5, "Learn endpoint (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 		t = *tp;
 		t.tv_sec += controler_mac_age;
 		endpoint_table[addr] = t;
-	}else
+	}else{
 		it->second.tv_sec = tp->tv_sec;
 		it->second.tv_nsec = tp->tv_nsec;
+	}
 }
