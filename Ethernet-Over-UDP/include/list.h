@@ -23,7 +23,7 @@ class ether_t {
 		}
 		ether_t(unsigned char MAC[6]) {
 			address = 0;
-			memcpy(((char *)&address)+2, MAC, sizeof(address));
+			memcpy(((char *)&address)+2, MAC, 6);
 		}
 		/* 0 on sucess; negative on failure */
 		int parse(char *s) {
