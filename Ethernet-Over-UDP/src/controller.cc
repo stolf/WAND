@@ -98,7 +98,7 @@ void learn_mac(ether_t mac, sockaddr_in addr, timespec* tp){
 		be.ts.tv_nsec = tp->tv_nsec;
 		bridge_table[mac] = be;
 	  	logger(MOD_CONTROLER, 6, "Learn mac(%s, %s:%d)\n", mac(), inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
-  }else{
+  }else if (it->second.ts.tv_sec != 0){
 		it->second.ts.tv_sec = tp->tv_sec + controler_mac_age;
 		it->second.ts.tv_nsec = tp->tv_nsec;
 
@@ -120,7 +120,7 @@ void learn_endpoint( sockaddr_in addr, timespec* tp){
 		t = *tp;
 		t.tv_sec += controler_endpoint_age;
 		endpoint_table[addr] = t;
-	}else{
+	}else if (it->second.tv_sec != 0){
 		it->second.tv_sec = tp->tv_sec + controler_endpoint_age;
 		it->second.tv_nsec = tp->tv_nsec;
 	}

@@ -155,12 +155,12 @@ static void e_list(int fd,char **argv,int argc)
 		logger(MOD_IPC, 15, "+ELIST %s\t%d\t%d\r\n",
 			inet_ntoa(i->first.sin_addr), 
 			ntohs(i->first.sin_port),
-			i->second.tv_sec - tp.tv_sec);
+			i->second.tv_sec?i->second.tv_sec - tp.tv_sec:0);
 
 		sprintf(tbuff,"+ELIST %s\t%d\t%d\r\n",
 			inet_ntoa(i->first.sin_addr), 
 			ntohs(i->first.sin_port),
-			i->second.tv_sec - tp.tv_sec);
+			i->second.tv_sec?i->second.tv_sec - tp.tv_sec:0);
 		ui_send(fd,tbuff);
 	}
 	logger(MOD_IPC, 15, "Finished elist\n");
