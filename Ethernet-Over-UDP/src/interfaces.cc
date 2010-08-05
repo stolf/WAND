@@ -104,8 +104,7 @@ int init_interface(void)
 
 
 	/* Open a socket so we can ioctl() */
-	//if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-	if ((skfd = socket(PF_PACKET, SOCK_RAW, 0)) < 0) {
+	if ((skfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
 	    logger(MOD_IF, 1, "Socket create failed - %m\n");
 	    return 0;
         }			
