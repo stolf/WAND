@@ -55,7 +55,7 @@ void udp_sendto(sockaddr_in addr,char *buffer,int size)
 
 void udp_broadcast(char* buffer, int size, sockaddr_in* addr)
 {
-	logger(MOD_IF,15,"Broadcasting\n");
+	//logger(MOD_IF,15,"Broadcasting\n");
 	for (endpoint_t::const_iterator i=endpoint_table.begin();
 		 i!=endpoint_table.end();
 		 i++){

@@ -99,7 +99,7 @@ void learn_mac(ether_t mac, sockaddr_in addr, timespec* tp){
 		bridge_table[mac] = be;
 	  	logger(MOD_CONTROLER, 6, "Learn mac(%s, %s:%d)\n", mac(), inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
   }else{
-		it->second.ts.tv_sec = tp->tv_sec;
+		it->second.ts.tv_sec = tp->tv_sec + controler_mac_age;
 		it->second.ts.tv_nsec = tp->tv_nsec;
 
 		// Allow for the MAC to move tunnels
@@ -118,10 +118,10 @@ void learn_endpoint( sockaddr_in addr, timespec* tp){
 	if (it == endpoint_table.end()){
 	  	logger(MOD_CONTROLER, 5, "Learn endpoint (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 		t = *tp;
-		t.tv_sec += controler_mac_age;
+		t.tv_sec += controler_endpoint_age;
 		endpoint_table[addr] = t;
 	}else{
-		it->second.tv_sec = tp->tv_sec;
+		it->second.tv_sec = tp->tv_sec + controler_endpoint_age;
 		it->second.tv_nsec = tp->tv_nsec;
 	}
 }
