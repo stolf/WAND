@@ -50,19 +50,25 @@ static void udp_callback(int fd)
 	if (size<16)
 		return;
 
-	if (dynamic_mac){
-		ether_t s_ether(((ether_header_t *)(buffer))->eth.ether_shost);
-		learn_mac(s_ether, addr, &tp);
-	}
 	if (dynamic_endpoint){
 		learn_endpoint(addr, &tp);
 	}
-	if (relay_broadcast){
-		ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);
-		if (d_ether.isBroadcast())
-			udp_broadcast(buffer, size, &addr);
-	}
-	send_interface(buffer,size);
+
+	// Only forward traffic if we know the endpoint, or we are told to
+	if (!no_endpoint_discard || endpoint_table.find(addr) != endpoint_table.end()){
+		if (dynamic_mac){
+			ether_t s_ether(((ether_header_t *)(buffer))->eth.ether_shost);
+			learn_mac(s_ether, addr, &tp);
+		}
+
+		if (relay_broadcast){
+			ether_t d_ether(((ether_header_t *)(buffer))->eth.ether_dhost);
+			if (d_ether.isBroadcast())
+				udp_broadcast(buffer, size, &addr);
+		}
+		send_interface(buffer,size);
+	}else
+		logger(MOD_NETWORK, 15, "Discard udp packet from unknown endpoint: %d\n",addr.sin_addr);
 };
 
 int udp_start(void)

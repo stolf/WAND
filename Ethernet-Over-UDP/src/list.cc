@@ -19,6 +19,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <assert.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 bridge_table_t bridge_table;
 endpoint_t endpoint_table;
@@ -68,6 +70,7 @@ bool add_ip(ether_t ether, struct sockaddr_in addr)
     }
   }else{
     bridge_table[ether] = be;
+    logger(MOD_CONTROLER, 6, "Add mac (%s, %s:%d)\n", ether(), inet_ntoa(be.addr.sin_addr), ntohs(be.addr.sin_port));
       ret = 2;
   }
 
@@ -78,6 +81,7 @@ bool add_ip(ether_t ether, struct sockaddr_in addr)
     }
   }else{
     endpoint_table[addr] = be.ts;
+    logger(MOD_CONTROLER, 5, "Add endpoint (%s:%d)\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
       ret = 2;
   }
   
@@ -96,6 +100,8 @@ bool add_ip(ether_t ether, struct sockaddr_in addr)
 bool rem_ip(ether_t ether)
 {
   bridge_table_t::iterator it;
+  bridge_table_t::iterator it3;
+  bridge_table_t::iterator del;
   endpoint_t::iterator it2;
 
   it = bridge_table.find(ether);
@@ -109,7 +115,24 @@ bool rem_ip(ether_t ether)
 
   if( it2 != endpoint_table.end() && it->second.ts.tv_sec == 0 && it2->second.tv_sec == 0) {
 	  logger(MOD_LIST, 15, "rem_ip() = TRUE\n");
-	  bridge_table.erase(it);
+
+	  del =  bridge_table.end();
+	  for(it3=bridge_table.begin(); it3!= bridge_table.end(); it3++){
+		  if (del != bridge_table.end()){
+			  bridge_table.erase(del);
+			  del = bridge_table.end();
+		  }
+		  if (it3->second.addr == it->second.addr){
+			  logger(MOD_CONTROLER, 6, "Delete mac (%s, %s:%d)\n", it3->first(), inet_ntoa(it3->second.addr.sin_addr), ntohs(it3->second.addr.sin_port));
+			  del = it3;
+		  }
+	  }
+	  if (del != bridge_table.end()){
+		  bridge_table.erase(del);
+		  del = bridge_table.end();
+	  }
+
+	  logger(MOD_CONTROLER, 5, "Delete endpoint (%s:%d)\n", inet_ntoa(it2->first.sin_addr), ntohs(it2->first.sin_port));
 	  endpoint_table.erase(it2);
 	  return true;
   }else{

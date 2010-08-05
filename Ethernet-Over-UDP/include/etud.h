@@ -13,6 +13,7 @@ extern int mtu;
 extern int forward_unknown;
 extern int dynamic_mac;
 extern int dynamic_endpoint;
+extern int no_endpoint_discard;
 extern int relay_broadcast;
 extern int controler_mac_age;
 extern int controler_endpoint_age;

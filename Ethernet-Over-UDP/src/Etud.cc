@@ -35,6 +35,7 @@ char *macaddr=NULL;
 char *ifname=NULL;
 int mtu=1280;
 int dynamic_mac = 1;
+int no_endpoint_discard = 1;
 int dynamic_endpoint = 0;
 int forward_unknown = 0;
 int relay_broadcast = 0;
@@ -60,6 +61,7 @@ void usage(const char *prog) {
 	printf("%s:	[-d module]	- Transport driver to use\n"
 "	[-a]		- Set mac age time in seconds\n"
 "	[-n]		- No dynamic mac learning\n"
+"	[-N]		- No discard when there is no endpoint\n"
 "	[-D]		- Don't daemonise\n"
 "	[-e]		- Do dynamic endpoint learning\n"
 "	[-E]		- Set endpoint age time in seconds\n"
@@ -99,6 +101,7 @@ int main(int argc,char **argv)
 	int cdo_daemonise=1;
 	int cdynamic_mac=1;
 	int cdynamic_endpoint=0;
+	int cno_endpoint_discard = 1;
 	int cforward_unknown=0;
 	int crelay_broadcast=0;
 	int ccontroler_mac_age = -1;
@@ -114,6 +117,7 @@ int main(int argc,char **argv)
 		{ "dynamic_mac", TYPE_BOOL|TYPE_NULL, &dynamic_mac },
 		{ "dynamic_endpoint", TYPE_BOOL|TYPE_NULL, &dynamic_endpoint },
 		{ "relay_broadcast", TYPE_BOOL|TYPE_NULL, &relay_broadcast },
+		{ "no_endpoint_discard", TYPE_BOOL|TYPE_NULL, &no_endpoint_discard },
 		{ "forward_unknown", TYPE_BOOL|TYPE_NULL, &forward_unknown },
 		{ "mac_age", TYPE_INT|TYPE_NULL, &controler_mac_age },
 		{ "endpoint_age", TYPE_INT|TYPE_NULL, &controler_endpoint_age },
@@ -136,7 +140,7 @@ int main(int argc,char **argv)
 
 	// Parse command line arguments
 	char ch;
-	while((ch = getopt(argc, argv, "a:c:d:eE:Df:rFhi:l:L:m:M:p:")) != -1){
+	while((ch = getopt(argc, argv, "a:c:d:eE:Df:rnNFhi:l:L:m:M:p:")) != -1){
 		switch(ch){	
 			case 'a':
 				ccontroler_mac_age = atoi(optarg);
@@ -155,6 +159,9 @@ int main(int argc,char **argv)
 				break;
 			case 'F':
 				cforward_unknown=1;
+				break;
+			case 'N':
+				cno_endpoint_discard=0;
 				break;
 			case 'n':
 				cdynamic_mac=0;
@@ -238,6 +245,8 @@ int main(int argc,char **argv)
 		relay_broadcast = 1;
 	if (cdynamic_mac == 0)
 		dynamic_mac = 0;
+	if (cno_endpoint_discard == 0)
+		no_endpoint_discard = 0;
 	if (cdynamic_endpoint == 1)
 		dynamic_endpoint = 1;
 	if (cudpport != -1)
