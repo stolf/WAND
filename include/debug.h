@@ -60,8 +60,9 @@ extern "C" {
 	 *
 	 * 	SYSLOG level of this alert = LOG_DEBUG
 	 */
-	
-void logger(int module, int level, const char *format, ...);
+extern int modtolevel[];
+extern int default_log_level;
+void _logger(int module, int level, const char *format, ...);
 
 /* Define the module names */
 
@@ -74,6 +75,18 @@ void logger(int module, int level, const char *format, ...);
 #define MOD_IF 6	/* Anything related to the interfaces code */
 #define MOD_LIST 7	/* All the stuff to do with etud's list code */
 #define MOD_CONTROLER 8	/* All the stuff to do with etud acting as a controler */
+
+#define logger(_a,_b,...) do { \
+	if (modtolevel[(_a)]< 0) { \
+		if (default_log_level >= (_b)) { \
+			_logger((_a), (_b), __VA_ARGS__); \
+		} \
+	} else { \
+		if (modtolevel[(_a)] >= (_b)) { \
+			_logger((_a), (_b), __VA_ARGS__); \
+		} \
+	} \
+}while(0)
 
 #ifdef __cplusplus
 }

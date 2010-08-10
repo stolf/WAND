@@ -35,7 +35,7 @@ extern int daemonised;
 
 /* See debug.h for a description of the module and level definations. */
 
-void logger(int module, int level, const char *format, ...)
+void _logger(int module, int level, const char *format, ...)
 {
 	va_list ap;
 	char buffer[513];
